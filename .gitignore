@@ -1,0 +1,43 @@
+# === MAVEN / COMPILADOS ===
+target/
+!.mvn/wrapper/maven-wrapper.jar
+
+# === IDE (Spring Tools Suite / Eclipse) ===
+.metadata
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings/
+.springBeans
+.sts4-cache
+bin/
+
+# === VS Code ===
+.vscode/
+
+# === IntelliJ ===
+.idea/
+*.iml
+
+# === LOGS ===
+*.log
+logs/
+
+# === SISTEMAS OPERACIONAIS ===
+Thumbs.db
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+
+# === DOCKER ===
+.docker/
+
+# === ENVIRONMENT FILES ===
+.env
+.env.*
+
+# === JAVA ===
+*.class
