@@ -1,10 +1,17 @@
 package com.ifbank.api_ifbank.service;
 
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.Random;
+import java.util.UUID;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.ifbank.api_ifbank.model.Cliente;
 import com.ifbank.api_ifbank.model.Conta;
@@ -31,6 +38,8 @@ import jakarta.transaction.Transactional;
 @Service
 public class UsuarioService implements IUsuarioService {
 
+	@Value("${app.upload.dir}")
+	private String uploadDir;
 	
     private UsuarioRepository usuarioRepository;
 	private EnderecoRepository enderecoRepository;
@@ -68,7 +77,7 @@ public class UsuarioService implements IUsuarioService {
     @Transactional 
     public String cadastrarCliente(CadastroClienteRequestDTO dto) {
         
-    	
+		
     	Usuario usuarioPorEmail = usuarioRepository.findByEmail(dto.getEmail());
     	if (usuarioPorEmail != null) {
     	    throw new RuntimeException("E-mail já cadastrado.");
@@ -87,6 +96,12 @@ public class UsuarioService implements IUsuarioService {
         usuario.setSenha(dto.getSenha()); 
         usuario.setIdTipoUsuario(1l); // 1 = CLIENTE
         usuario = usuarioRepository.save(usuario);
+        
+        String caminhoFoto = null;
+
+        if (dto.getFoto() != null && !dto.getFoto().isEmpty()) {
+            caminhoFoto = salvarFoto(dto.getFoto(), usuario.getId());
+        }
 
         // 3. Salvar o Endereço
         Endereco endereco = new Endereco(null, dto.getLogradouro(), dto.getNumero(), dto.getComplemento(), dto.getBairro(), dto.getCidade(), dto.getEstado(), dto.getCep());
@@ -101,7 +116,7 @@ public class UsuarioService implements IUsuarioService {
         cliente.setNome(dto.getNome());
         cliente.setDataNascimento(dto.getDataNascimento());
         cliente.setDataCadastro(LocalDate.now());
-        cliente.setFotoUrl(dto.getFotoUrl());
+        cliente.setFotoUrl(caminhoFoto);
         cliente.setUsuario(usuario);
         cliente.setEndereco(endereco);
         cliente.setTelefone(telefone);
@@ -168,4 +183,33 @@ public class UsuarioService implements IUsuarioService {
 
         return perfil;
     }
+	
+	
+	private String salvarFoto(MultipartFile arquivo, Long idUsuario) {
+	    try {
+	        Path pastaUpload = Paths.get(uploadDir, "clientes", idUsuario.toString());
+
+	        if (!Files.exists(pastaUpload)) {
+	            Files.createDirectories(pastaUpload);
+	        }
+
+	        String nomeOriginal = arquivo.getOriginalFilename();
+
+	        if (nomeOriginal == null || !nomeOriginal.contains(".")) {
+	            throw new RuntimeException("Arquivo inválido.");
+	        }
+
+	        String extensao = nomeOriginal.substring(nomeOriginal.lastIndexOf("."));
+	        String nomeUnico = UUID.randomUUID().toString() + extensao;
+
+	        Path caminhoCompleto = pastaUpload.resolve(nomeUnico);
+
+	        Files.write(caminhoCompleto, arquivo.getBytes());
+
+	        return "/uploads/clientes/" + idUsuario + "/" + nomeUnico;
+
+	    } catch (IOException e) {
+	        throw new RuntimeException("Falha ao salvar a foto de perfil: " + e.getMessage());
+	    }
+	}
 }

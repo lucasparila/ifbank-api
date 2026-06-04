@@ -1,12 +1,13 @@
 package com.ifbank.api_ifbank.controller;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -25,8 +26,8 @@ public class ClienteController {
 		this.usuarioService = usuarioService;
 	}
 
-    @PostMapping
-    public ResponseEntity<?> cadastrar(@RequestBody CadastroClienteRequestDTO dadosCadastro) {
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> cadastrar(@ModelAttribute CadastroClienteRequestDTO dadosCadastro) {
         try {
             String mensagem = usuarioService.cadastrarCliente(dadosCadastro);
             return ResponseEntity.status(HttpStatus.CREATED).body(mensagem);

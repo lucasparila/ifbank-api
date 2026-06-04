@@ -2,6 +2,8 @@ package com.ifbank.api_ifbank.model.DTO.cadastro;
 
 import java.time.LocalDate;
 
+import org.springframework.web.multipart.MultipartFile;
+
 public class CadastroClienteRequestDTO {
 	// Dados do Usuário
     private String email;
@@ -11,15 +13,7 @@ public class CadastroClienteRequestDTO {
     // Dados do Cliente
     private String nome;
     private LocalDate dataNascimento;
-    private String fotoUrl;
-    
-    public String getFotoUrl() {
-		return fotoUrl;
-	}
-
-	public void setFotoUrl(String fotoUrl) {
-		this.fotoUrl = fotoUrl;
-	}
+    private MultipartFile foto;
 
 	// Dados do Endereço
     private String logradouro;
@@ -36,6 +30,15 @@ public class CadastroClienteRequestDTO {
     private Integer numeroTelefone;
     
     CadastroClienteRequestDTO(){}
+
+    
+	public MultipartFile getFoto() {
+		return foto;
+	}
+
+	public void setFoto(MultipartFile foto) {
+		this.foto = foto;
+	}
 
 	public String getEmail() {
 		return email;

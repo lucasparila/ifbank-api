@@ -22,6 +22,9 @@ services:
       DB_URL: jdbc:oracle:thin:@oracle-db:1521/FREEPDB1
       DB_USER: ifbank_database
       DB_PASSWORD: senha123
+      UPLOAD_DIR: /app/uploads
+    volumes:
+      - uploads_data:/app/uploads
     depends_on:
       - oracle-db
     networks:
@@ -29,6 +32,7 @@ services:
 
 volumes:
   oracle_data:
+  uploads_data:
 
 networks:
   ifbank-network:
