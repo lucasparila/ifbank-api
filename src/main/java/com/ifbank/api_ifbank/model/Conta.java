@@ -3,6 +3,8 @@ package com.ifbank.api_ifbank.model;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+import com.ifbank.api_ifbank.model.enums.StatusConta;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -85,6 +87,10 @@ public class Conta {
 
 	public void setIdStatusConta(Integer idStatusConta) {
 		this.idStatusConta = idStatusConta;
+	}
+	
+	public StatusConta getStatusConta() {
+		return StatusConta.fromId(this.idStatusConta);
 	}
 
 	public Cliente getCliente() {

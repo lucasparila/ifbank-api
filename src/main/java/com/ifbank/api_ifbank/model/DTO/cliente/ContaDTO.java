@@ -7,14 +7,13 @@ public class ContaDTO {
 	private String numeroConta;
     private BigDecimal saldo;
     private LocalDate dataAbertura;
-    private Integer idStatusConta;
+    private String statusConta;
     
-	public ContaDTO(String numeroConta, BigDecimal saldo, LocalDate dataAbertura, Integer idStatusConta) {
-		super();
+	public ContaDTO(String numeroConta, BigDecimal saldo, LocalDate dataAbertura, String statusConta) {
 		this.numeroConta = numeroConta;
 		this.saldo = saldo;
 		this.dataAbertura = dataAbertura;
-		this.idStatusConta = idStatusConta;
+		this.statusConta = statusConta;
 	}
 
 	public String getNumeroConta() {
@@ -41,11 +40,11 @@ public class ContaDTO {
 		this.dataAbertura = dataAbertura;
 	}
 
-	public Integer getIdStatusConta() {
-		return idStatusConta;
+	public String getStatusConta() {
+		return this.statusConta;
 	}
 
-	public void setIdStatusConta(Integer idStatusConta) {
-		this.idStatusConta = idStatusConta;
+	public void setStatusConta(String statusConta) {
+		this.statusConta = statusConta;
 	}
 }
