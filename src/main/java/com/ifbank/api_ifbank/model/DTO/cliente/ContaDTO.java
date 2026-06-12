@@ -40,11 +40,11 @@ public class ContaDTO {
 		this.dataAbertura = dataAbertura;
 	}
 
-	public String getIdStatusConta() {
+	public String getStatusConta() {
 		return this.statusConta;
 	}
 
-	public void setIdStatusConta(String statusConta) {
+	public void setStatusConta(String statusConta) {
 		this.statusConta = statusConta;
 	}
 }
