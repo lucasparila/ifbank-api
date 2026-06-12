@@ -26,6 +26,8 @@ import com.ifbank.api_ifbank.model.DTO.cliente.TelefoneDTO;
 import com.ifbank.api_ifbank.model.DTO.login.LoginRequestDTO;
 import com.ifbank.api_ifbank.model.DTO.login.LoginResponseDTO;
 import com.ifbank.api_ifbank.model.DTO.perfil.PerfilCompletoDTO;
+import com.ifbank.api_ifbank.model.enums.StatusConta;
+import com.ifbank.api_ifbank.model.enums.TipoUsuario;
 import com.ifbank.api_ifbank.repository.ClienteRepository;
 import com.ifbank.api_ifbank.repository.ContaRepository;
 import com.ifbank.api_ifbank.repository.EnderecoRepository;
@@ -68,6 +70,22 @@ public class UsuarioService implements IUsuarioService {
         if (!usuario.getSenha().equals(dadosLogin.getSenha())) {
         	throw new RuntimeException("Senha incorreta.");
         }
+        
+        Cliente cliente = clienteRepository.findByUsuarioId(usuario.getId());
+        if(cliente == null) {
+        	throw new RuntimeException("Cliente não encontrado.");
+        }
+        
+        Conta conta = contaRepository.findByClienteId(cliente.getId());
+        
+        if(conta == null) {
+        	throw new RuntimeException("Conta não encontrado.");
+        }
+        
+        if(conta.getStatusConta().equals(StatusConta.PENDENTE)) {
+        	throw new RuntimeException("Sua conta está pendente de aprovação.");
+        }
+        
 
         return new LoginResponseDTO(usuario.getId(), usuario.getCpf(), usuario.getEmail(),usuario.getTipoUsuario().name());
      
@@ -94,7 +112,7 @@ public class UsuarioService implements IUsuarioService {
         usuario.setCpf(dto.getCpf());
         usuario.setEmail(dto.getEmail());
         usuario.setSenha(dto.getSenha()); 
-        usuario.setIdTipoUsuario(1l); // 1 = CLIENTE
+        usuario.setIdTipoUsuario(TipoUsuario.CLIENTE.getId());
         usuario = usuarioRepository.save(usuario);
         
         String caminhoFoto = null;
@@ -129,7 +147,7 @@ public class UsuarioService implements IUsuarioService {
         conta.setNumeroConta(numeroContaGerado);
         conta.setSaldo(BigDecimal.ZERO); 
         conta.setDataAbertura(LocalDate.now());
-        conta.setIdStatusConta(1); // 1 = PENDENTE (Aguardando aprovação do gerente)
+        conta.setIdStatusConta(StatusConta.PENDENTE.getId()); 
         conta.setCliente(cliente);
         contaRepository.save(conta);
 
@@ -167,7 +185,7 @@ public class UsuarioService implements IUsuarioService {
         // Monta o ContaDTO
         ContaDTO contaDTO = null;
         if (conta != null) {
-            contaDTO = new ContaDTO(conta.getNumeroConta(), conta.getSaldo(), conta.getDataAbertura(), conta.getIdStatusConta());
+            contaDTO = new ContaDTO(conta.getNumeroConta(), conta.getSaldo(), conta.getDataAbertura(),conta.getStatusConta().name());
         }
 
         // Monta PerfilCompletoDTO
