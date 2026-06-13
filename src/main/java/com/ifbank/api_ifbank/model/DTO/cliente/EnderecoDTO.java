@@ -9,6 +9,8 @@ public class EnderecoDTO {
     private String estado;
     private String cep;
     
+    
+    public EnderecoDTO() {}
 	public EnderecoDTO(String logradouro, Integer numero, String complemento, String bairro, String cidade,
 			String estado, String cep) {
 		super();

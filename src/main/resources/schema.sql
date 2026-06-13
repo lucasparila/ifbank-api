@@ -241,6 +241,14 @@ INSERT INTO StatusConta (nome_status) VALUES ('REJEITADA');
 INSERT INTO Usuarios (CPF, senha, email, id_tipo_usuario)
 VALUES ('12345678901', 'senha123', 'cliente@ifbank.com', 1);
 
+-- Criando Usuário Gerente Inicial (Ganha ID 2 automaticamente)
+INSERT INTO Usuarios (CPF, senha, email, id_tipo_usuario)
+VALUES ('55332581504', 'senha321', 'gerente@ifbank.com', 2);
+
+-- Criando Gerente associado ao usuário 2 (Ganha ID 2 automaticamente)
+INSERT INTO Gerentes(nome,data_nascimento,id_usuario)
+VALUES ('Bianca Garcia', TO_DATE('1994-02-03', 'YYYY-MM-DD'),2);
+
 -- Criando dados de Perfil associados (Ganha ID 1 em tudo automaticamente)
 INSERT INTO Enderecos (logradouro, numero, bairro, cidade, estado, cep)
 VALUES ('Rua Ficticia', 10, 'Centro', 'Araraquara', 'SP', '14800-000');
