@@ -1,25 +1,23 @@
 package com.ifbank.api_ifbank.model.DTO.perfil;
 
-import com.ifbank.api_ifbank.model.DTO.cliente.ClienteDTO;
-import com.ifbank.api_ifbank.model.DTO.cliente.ContaDTO;
+import com.ifbank.api_ifbank.model.DTO.gerente.GerenteDTO;
 
-public class PerfilCompletoDTO {
-
+public class PerfilGerenteCompletoDTO {
 	private Long idUsuario;
     private String email;
     private String cpf;
     private String perfil;
-    private ClienteDTO cliente;
-    private ContaDTO conta;
+    private GerenteDTO gerente;
     
-	public PerfilCompletoDTO(Long idUsuario, String email, String cpf, String perfil,ClienteDTO cliente, ContaDTO conta) {
+    public PerfilGerenteCompletoDTO() {}
+
+	public PerfilGerenteCompletoDTO(Long idUsuario, String email, String cpf, String perfil, GerenteDTO geretenDTO) {
 		super();
 		this.idUsuario = idUsuario;
 		this.email = email;
 		this.cpf = cpf;
 		this.perfil = perfil;
-		this.cliente = cliente;
-		this.conta = conta;
+		this.gerente = geretenDTO;
 	}
 
 	public Long getIdUsuario() {
@@ -54,22 +52,13 @@ public class PerfilCompletoDTO {
 		this.perfil = perfil;
 	}
 
-	public ClienteDTO getCliente() {
-		return cliente;
+	public GerenteDTO getGerente() {
+		return this.gerente;
 	}
 
-	public void setCliente(ClienteDTO cliente) {
-		this.cliente = cliente;
-	}
-
-	public ContaDTO getConta() {
-		return conta;
-	}
-
-	public void setConta(ContaDTO conta) {
-		this.conta = conta;
+	public void setGerente(GerenteDTO geretenDTO) {
+		this.gerente = geretenDTO;
 	}
     
 	
-    
 }

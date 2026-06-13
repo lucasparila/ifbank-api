@@ -12,6 +12,7 @@ public class ClienteDTO {
     private EnderecoDTO endereco;
     private TelefoneDTO telefone;
     
+    public ClienteDTO() {}
 	public ClienteDTO(Long id, String nome, LocalDate dataNascimento, LocalDate dataCadastro,String fotoUrl, EnderecoDTO endereco,TelefoneDTO telefone) {
 		super();
 		this.id = id;

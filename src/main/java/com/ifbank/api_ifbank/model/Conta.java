@@ -19,6 +19,7 @@ import jakarta.persistence.Table;
 public class Conta {
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id")
     private Long id;
     
     @Column(name = "numeroConta")
