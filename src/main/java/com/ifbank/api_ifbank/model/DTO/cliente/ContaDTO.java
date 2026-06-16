@@ -4,17 +4,28 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public class ContaDTO {
-	private String numeroConta;
+		private String numeroConta;
     private BigDecimal saldo;
     private LocalDate dataAbertura;
     private Integer idStatusConta;
+		private Long id;
     
-	public ContaDTO(String numeroConta, BigDecimal saldo, LocalDate dataAbertura, Integer idStatusConta) {
+	public ContaDTO(Long id, String numeroConta, BigDecimal saldo, LocalDate dataAbertura, Integer idStatusConta) {
 		super();
+		this.id = id;
 		this.numeroConta = numeroConta;
 		this.saldo = saldo;
 		this.dataAbertura = dataAbertura;
 		this.idStatusConta = idStatusConta;
+	}
+
+	
+	public Long getId() { 
+		return id; 
+	}
+
+	public void setId(Long id) { 
+		this.id = id; 
 	}
 
 	public String getNumeroConta() {

@@ -9,6 +9,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
@@ -19,20 +20,25 @@ public class Conta {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    @Column(name = "numeroConta")
-    private String numeroConta;
-    
-    private BigDecimal saldo;
-    
-    @Column(name = "dataAbertura")
-    private LocalDate dataAbertura;
-    
-    @Column(name = "idStatusConta")
-    private Integer idStatusConta; 
+	@Column(name = "numero_conta")
+	private String numeroConta;
+
+	@Column(name = "saldo")
+	private BigDecimal saldo;
+
+	@Column(name = "data_abertura")
+	private LocalDate dataAbertura;
+
+	@Column(name = "id_status_conta")
+	private Integer idStatusConta; 
 
     @OneToOne
     @JoinColumn(name = "id_cliente", referencedColumnName = "id", nullable = false, unique = true)
     private Cliente cliente; 
+
+		@OneToMany(mappedBy = "conta")
+		private java.util.List<AplicacaoInvestimento> aplicacoes;
+
     
     public Conta() {}
 
@@ -91,6 +97,7 @@ public class Conta {
 		return cliente;
 	}
 
+	
 	public void setCliente(Cliente cliente) {
 		this.cliente = cliente;
 	}

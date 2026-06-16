@@ -255,6 +255,22 @@ VALUES ('Usuário de Teste', TO_DATE('1990-01-01', 'YYYY-MM-DD'), SYSDATE,'camin
 INSERT INTO Contas (numero_conta, saldo, data_abertura, id_status_conta, id_cliente)
 VALUES ('10001-2', 500.00, SYSDATE, 1, 1);
 
+-- Tipos de Investimento iniciais
+INSERT INTO TiposInvestimento (nome, rentabilidade_mes, carencia_dias, valorMinimo)
+VALUES ('CDB', 0.009500, 0, 100.00);
+
+INSERT INTO TiposInvestimento (nome, rentabilidade_mes, carencia_dias, valorMinimo)
+VALUES ('LCI', 0.008800, 90, 500.00);
+
+INSERT INTO TiposInvestimento (nome, rentabilidade_mes, carencia_dias, valorMinimo)
+VALUES ('LCA', 0.008500, 90, 500.00);
+
+INSERT INTO TiposInvestimento (nome, rentabilidade_mes, carencia_dias, valorMinimo)
+VALUES ('Tesouro Direto', 0.007200, 0, 30.00);
+
+INSERT INTO TiposInvestimento (nome, rentabilidade_mes, carencia_dias, valorMinimo)
+VALUES ('Fundos', 0.010000, 30, 1000.00);
+
 COMMIT;
 
 
