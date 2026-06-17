@@ -23,4 +23,5 @@ public enum StatusConta {
         }
         throw new IllegalArgumentException("ID de status de conta inválido: " + id);
     }
+    
 }

@@ -70,7 +70,8 @@ public class GerenteService implements IGerenteService {
 
            
             ContaDTO contaDTO = new ContaDTO();
-            contaDTO.setIdConta(conta.getId());
+            contaDTO.setId(conta.getId());
+            contaDTO.setStatusConta(conta.getStatusConta().name());
             contaDTO.setNumeroConta(conta.getNumeroConta());
             contaDTO.setSaldo(conta.getSaldo());
             contaDTO.setDataAbertura(conta.getDataAbertura());
@@ -91,18 +92,15 @@ public class GerenteService implements IGerenteService {
 
     @Override
     public void aprovarContaCliente(Long idConta) {
-        Conta conta = contaRepository.findById(idConta).get();
-        
-        if(conta == null) {
-        	throw new RuntimeException("Conta não encontrada.");
+        Conta conta = contaRepository.findById(idConta)
+                .orElseThrow(() -> new RuntimeException("Conta não encontrada."));
+
+        if (!conta.getStatusConta().equals(StatusConta.PENDENTE)) {
+            throw new RuntimeException("Conta não está mais pendente. Status atual: " 
+                    + conta.getStatusConta().name());
         }
-        
-        if(!conta.getStatusConta().equals(StatusConta.PENDENTE)) {
-        	throw new RuntimeException("Conta não está mais pendente.");
-        }
-        
+
         conta.setIdStatusConta(StatusConta.ATIVA.getId());
-        
         contaRepository.save(conta);
     }
 

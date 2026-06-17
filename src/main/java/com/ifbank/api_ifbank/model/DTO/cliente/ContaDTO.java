@@ -4,57 +4,36 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public class ContaDTO {
-	private Long id;
-	private String numeroConta;
+
+    private Long id;
+    private String numeroConta;
     private BigDecimal saldo;
     private LocalDate dataAbertura;
-    private String statusConta;
-    
+    private String statusConta; // nome do status como String (ex: "ATIVA")
+
     public ContaDTO() {}
-	public ContaDTO(Long Conta,String numeroConta, BigDecimal saldo, LocalDate dataAbertura, String statusConta) {
-		this.id = Conta;
-		this.numeroConta = numeroConta;
-		this.saldo = saldo;
-		this.dataAbertura = dataAbertura;
-		this.statusConta = statusConta;
-	}
 
-	
-	public Long getIdConta() {
-		return id;
-	}
-	public void setIdConta(Long id) {
-		this.id = id;
-	}
-	public String getNumeroConta() {
-		return numeroConta;
-	}
+    // Construtor usado pelo UsuarioService
+    public ContaDTO(Long id, String numeroConta, BigDecimal saldo, LocalDate dataAbertura, String statusConta) {
+        this.id = id;
+        this.numeroConta = numeroConta;
+        this.saldo = saldo;
+        this.dataAbertura = dataAbertura;
+        this.statusConta = statusConta;
+    }
 
-	public void setNumeroConta(String numeroConta) {
-		this.numeroConta = numeroConta;
-	}
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-	public BigDecimal getSaldo() {
-		return saldo;
-	}
+    public String getNumeroConta() { return numeroConta; }
+    public void setNumeroConta(String numeroConta) { this.numeroConta = numeroConta; }
 
-	public void setSaldo(BigDecimal saldo) {
-		this.saldo = saldo;
-	}
+    public BigDecimal getSaldo() { return saldo; }
+    public void setSaldo(BigDecimal saldo) { this.saldo = saldo; }
 
-	public LocalDate getDataAbertura() {
-		return dataAbertura;
-	}
+    public LocalDate getDataAbertura() { return dataAbertura; }
+    public void setDataAbertura(LocalDate dataAbertura) { this.dataAbertura = dataAbertura; }
 
-	public void setDataAbertura(LocalDate dataAbertura) {
-		this.dataAbertura = dataAbertura;
-	}
-
-	public String getStatusConta() {
-		return this.statusConta;
-	}
-
-	public void setStatusConta(String statusConta) {
-		this.statusConta = statusConta;
-	}
+    public String getStatusConta() { return statusConta; }
+    public void setStatusConta(String statusConta) { this.statusConta = statusConta; }
 }

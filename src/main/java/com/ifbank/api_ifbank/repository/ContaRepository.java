@@ -12,6 +12,7 @@ import com.ifbank.api_ifbank.model.Conta;
 @Repository
 public interface ContaRepository extends JpaRepository<Conta, Long> {
 	Conta findByClienteId(Long id);
+	Conta findByNumeroConta(String numeroConta);
 	@Query("SELECT c FROM Conta c JOIN FETCH c.cliente cli JOIN FETCH cli.usuario u WHERE c.idStatusConta = :statusId")
     List<Conta> findByStatusContaFetch(@Param("statusId") Integer statusId);
 }

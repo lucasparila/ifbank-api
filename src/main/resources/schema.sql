@@ -237,6 +237,27 @@ INSERT INTO StatusConta (nome_status) VALUES ('ATIVA');
 INSERT INTO StatusConta (nome_status) VALUES ('INATIVA');
 INSERT INTO StatusConta (nome_status) VALUES ('REJEITADA');
 
+-- ====================================================================
+-- CARGA DE ENUMS: TIPOS DE MOVIMENTO (TABELA TiposMovimento)
+-- ====================================================================
+
+-- 1. Movimentações Básicas de Caixa
+INSERT INTO TiposMovimento (tipo_movimento) VALUES ('DEPOSITO');
+INSERT INTO TiposMovimento (tipo_movimento) VALUES ('SAQUE');
+
+-- 2. Transferências entre Contas (Internas ou Externas/Pix)
+INSERT INTO TiposMovimento (tipo_movimento) VALUES ('TRANSFERENCIA_ENVIADA');
+INSERT INTO TiposMovimento (tipo_movimento) VALUES ('TRANSFERENCIA_RECEBIDA');
+
+-- 3. Movimentações de Investimentos (Fluxo da Conta para Aplicação e vice-versa)
+INSERT INTO TiposMovimento (tipo_movimento) VALUES ('APLICACAO_INVESTIMENTO');
+INSERT INTO TiposMovimento (tipo_movimento) VALUES ('RESGATE_INVESTIMENTO');
+
+-- 4. Movimentações de Empréstimos (Entrada do crédito e Pagamento das parcelas)
+INSERT INTO TiposMovimento (tipo_movimento) VALUES ('CREDITO_EMPRESTIMO');
+INSERT INTO TiposMovimento (tipo_movimento) VALUES ('PAGAMENTO_PARCELA_EMPRESTIMO');
+
+
 -- Criando Usuário Cliente Inicial (Ganha ID 1 automaticamente)
 INSERT INTO Usuarios (CPF, senha, email, id_tipo_usuario)
 VALUES ('12345678901', 'senha123', 'cliente@ifbank.com', 1);
@@ -263,6 +284,23 @@ VALUES ('Usuário de Teste', TO_DATE('1990-01-01', 'YYYY-MM-DD'), SYSDATE,'camin
 INSERT INTO Contas (numero_conta, saldo, data_abertura, id_status_conta, id_cliente)
 VALUES ('10001-2', 500.00, SYSDATE, 1, 1);
 
+-- Tipos de Investimento iniciais
+INSERT INTO TiposInvestimento (nome, rentabilidade_mes, carencia_dias, valorMinimo)
+VALUES ('CDB', 0.009500, 0, 100.00);
+
+INSERT INTO TiposInvestimento (nome, rentabilidade_mes, carencia_dias, valorMinimo)
+VALUES ('LCI', 0.008800, 90, 500.00);
+
+INSERT INTO TiposInvestimento (nome, rentabilidade_mes, carencia_dias, valorMinimo)
+VALUES ('LCA', 0.008500, 90, 500.00);
+
+INSERT INTO TiposInvestimento (nome, rentabilidade_mes, carencia_dias, valorMinimo)
+VALUES ('Tesouro Direto', 0.007200, 0, 30.00);
+
+INSERT INTO TiposInvestimento (nome, rentabilidade_mes, carencia_dias, valorMinimo)
+VALUES ('Fundos', 0.010000, 30, 1000.00);
+
 COMMIT;
+
 
 
