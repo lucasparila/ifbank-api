@@ -32,6 +32,10 @@ public class LoginController {
             if (e.getMessage().contains("Senha")) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
             }
+            
+            if(e.getMessage().contains("pendente")) {
+            	return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+            }
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }

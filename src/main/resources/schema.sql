@@ -237,9 +237,38 @@ INSERT INTO StatusConta (nome_status) VALUES ('ATIVA');
 INSERT INTO StatusConta (nome_status) VALUES ('INATIVA');
 INSERT INTO StatusConta (nome_status) VALUES ('REJEITADA');
 
+-- ====================================================================
+-- CARGA DE ENUMS: TIPOS DE MOVIMENTO (TABELA TiposMovimento)
+-- ====================================================================
+
+-- 1. Movimentações Básicas de Caixa
+INSERT INTO TiposMovimento (tipo_movimento) VALUES ('DEPOSITO');
+INSERT INTO TiposMovimento (tipo_movimento) VALUES ('SAQUE');
+
+-- 2. Transferências entre Contas (Internas ou Externas/Pix)
+INSERT INTO TiposMovimento (tipo_movimento) VALUES ('TRANSFERENCIA_ENVIADA');
+INSERT INTO TiposMovimento (tipo_movimento) VALUES ('TRANSFERENCIA_RECEBIDA');
+
+-- 3. Movimentações de Investimentos (Fluxo da Conta para Aplicação e vice-versa)
+INSERT INTO TiposMovimento (tipo_movimento) VALUES ('APLICACAO_INVESTIMENTO');
+INSERT INTO TiposMovimento (tipo_movimento) VALUES ('RESGATE_INVESTIMENTO');
+
+-- 4. Movimentações de Empréstimos (Entrada do crédito e Pagamento das parcelas)
+INSERT INTO TiposMovimento (tipo_movimento) VALUES ('CREDITO_EMPRESTIMO');
+INSERT INTO TiposMovimento (tipo_movimento) VALUES ('PAGAMENTO_PARCELA_EMPRESTIMO');
+
+
 -- Criando Usuário Cliente Inicial (Ganha ID 1 automaticamente)
 INSERT INTO Usuarios (CPF, senha, email, id_tipo_usuario)
 VALUES ('12345678901', 'senha123', 'cliente@ifbank.com', 1);
+
+-- Criando Usuário Gerente Inicial (Ganha ID 2 automaticamente)
+INSERT INTO Usuarios (CPF, senha, email, id_tipo_usuario)
+VALUES ('55332581504', 'senha321', 'gerente@ifbank.com', 2);
+
+-- Criando Gerente associado ao usuário 2 (Ganha ID 2 automaticamente)
+INSERT INTO Gerentes(nome,data_nascimento,id_usuario)
+VALUES ('Bianca Garcia', TO_DATE('1994-02-03', 'YYYY-MM-DD'),2);
 
 -- Criando dados de Perfil associados (Ganha ID 1 em tudo automaticamente)
 INSERT INTO Enderecos (logradouro, numero, bairro, cidade, estado, cep)
@@ -272,5 +301,6 @@ INSERT INTO TiposInvestimento (nome, rentabilidade_mes, carencia_dias, valorMini
 VALUES ('Fundos', 0.010000, 30, 1000.00);
 
 COMMIT;
+
 
 
