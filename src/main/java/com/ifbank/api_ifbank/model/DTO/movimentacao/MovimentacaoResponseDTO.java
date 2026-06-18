@@ -10,6 +10,9 @@ public class MovimentacaoResponseDTO {
     private BigDecimal valor;
     private BigDecimal saldoAtualizado;
     private LocalDate dataMovimento;
+    private String nomeCliente;
+    private String emailCliente;
+    private String contaDestino;
 
     public MovimentacaoResponseDTO() {}
 
@@ -27,4 +30,13 @@ public class MovimentacaoResponseDTO {
 
     public LocalDate getDataMovimento() { return dataMovimento; }
     public void setDataMovimento(LocalDate dataMovimento) { this.dataMovimento = dataMovimento; }
+
+    public String getNomeCliente() { return nomeCliente; }
+    public void setNomeCliente(String nomeCliente) { this.nomeCliente = nomeCliente; }
+
+    public String getEmailCliente() { return emailCliente; }
+    public void setEmailCliente(String emailCliente) { this.emailCliente = emailCliente; }
+
+    public String getContaDestino() { return contaDestino; }
+    public void setContaDestino(String contaDestino) { this.contaDestino = contaDestino; }
 }

@@ -5,6 +5,10 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.ifbank.api_ifbank.model.Conta;
@@ -210,15 +214,54 @@ public class MovimentacaoService implements IMovimentacaoService {
 
         return movimentacaoRepository.findByContaIdOrderByDataMovimentoDesc(idConta)
                 .stream()
-                .map(mov -> {
-                    MovimentacaoResponseDTO dto = new MovimentacaoResponseDTO();
-                    dto.setId(mov.getId());
-                    dto.setTipoMovimento(mov.getTipoMovimento().getTipoMovimento());
-                    dto.setValor(mov.getValor());
-                    dto.setDataMovimento(mov.getDataMovimento());
-                    // saldoAtualizado fica null no histórico — não temos snapshot por movimentação
-                    return dto;
-                })
+                .map(this::mapToResponse)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Page<MovimentacaoResponseDTO> buscarExtrato(Long idConta,
+                                                       String nome,
+                                                       BigDecimal valor,
+                                                       int pagina,
+                                                       int tamanho,
+                                                       String ordenacao,
+                                                       String direcao) {
+        contaRepository.findById(idConta)
+                .orElseThrow(() -> new RuntimeException("Conta não encontrada."));
+
+        String sortField = "dataMovimento";
+        if (ordenacao != null && !ordenacao.isBlank()) {
+            if (ordenacao.equals("valor") || ordenacao.equals("tipoMovimento") || ordenacao.equals("dataMovimento")) {
+                sortField = ordenacao;
+            }
+        }
+
+        Sort.Direction direction = Sort.Direction.fromOptionalString(direcao).orElse(Sort.Direction.DESC);
+        Pageable pageable = PageRequest.of(Math.max(pagina, 0), Math.max(tamanho, 1), Sort.by(direction, sortField));
+
+        Page<Movimentacao> page = movimentacaoRepository.buscarPorContaNomeOuValor(idConta,
+                (nome == null || nome.isBlank()) ? null : nome,
+                valor,
+                pageable);
+
+        return page.map(this::mapToResponse);
+    }
+
+    private MovimentacaoResponseDTO mapToResponse(Movimentacao mov) {
+        MovimentacaoResponseDTO dto = new MovimentacaoResponseDTO();
+        dto.setId(mov.getId());
+        dto.setTipoMovimento(mov.getTipoMovimento().getTipoMovimento());
+        dto.setValor(mov.getValor());
+        dto.setDataMovimento(mov.getDataMovimento());
+        if (mov.getConta() != null && mov.getConta().getCliente() != null) {
+            dto.setNomeCliente(mov.getConta().getCliente().getNome());
+            if (mov.getConta().getCliente().getUsuario() != null) {
+                dto.setEmailCliente(mov.getConta().getCliente().getUsuario().getEmail());
+            }
+        }
+        if (mov.getContaDestino() != null) {
+            dto.setContaDestino(mov.getContaDestino().getNumeroConta());
+        }
+        return dto;
     }
 }
