@@ -198,7 +198,7 @@ public class UsuarioService implements IUsuarioService {
         // Monta o ContaDTO
         ContaDTO contaDTO = null;
         if (conta != null) {
-            contaDTO = new ContaDTO(conta.getId(), conta.getNumeroConta(), conta.getSaldo(), conta.getDataAbertura(),conta.getStatusConta().name());
+            contaDTO = new ContaDTO(conta.getId(), conta.getNumeroConta(), conta.getSaldo(), conta.getDataAbertura(), conta.getStatusConta().name());
         }
 
         // Monta PerfilCompletoDTO

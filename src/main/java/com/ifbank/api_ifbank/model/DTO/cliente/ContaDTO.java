@@ -9,11 +9,10 @@ public class ContaDTO {
     private String numeroConta;
     private BigDecimal saldo;
     private LocalDate dataAbertura;
-    private String statusConta; // nome do status como String (ex: "ATIVA")
+    private String statusConta;
 
     public ContaDTO() {}
 
-    // Construtor usado pelo UsuarioService
     public ContaDTO(Long id, String numeroConta, BigDecimal saldo, LocalDate dataAbertura, String statusConta) {
         this.id = id;
         this.numeroConta = numeroConta;
@@ -37,3 +36,4 @@ public class ContaDTO {
     public String getStatusConta() { return statusConta; }
     public void setStatusConta(String statusConta) { this.statusConta = statusConta; }
 }
+
