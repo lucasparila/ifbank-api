@@ -7,36 +7,23 @@
 -- ====================================================================
 -- 1. LIMPEZA PRÉVIA PADRONIZADA EM UPPERCASE
 -- ====================================================================
-DECLARE
-    PROCEDURE drop_table(p_table VARCHAR2) IS
-    BEGIN
-        EXECUTE IMMEDIATE 'DROP TABLE ' || p_table || ' CASCADE CONSTRAINTS';
-    EXCEPTION
-        WHEN OTHERS THEN
-            IF SQLCODE != -942 THEN
-                RAISE;
-            END IF;
-    END;
-BEGIN
-    drop_table('RECUPERACAOSENHA');
-    drop_table('PARCELASEMPRESTIMOS');
-    drop_table('EMPRESTIMOS');
-    drop_table('MOVIMENTACOES');
-    drop_table('APLICACOESINVESTIMENTOS');
-    drop_table('CONTAS');
-    drop_table('CLIENTES');
-    drop_table('GERENTES');
-    drop_table('TELEFONES');
-    drop_table('ENDERECOS');
-    drop_table('USUARIOS');
-    drop_table('STATUSPARCELASEMPRESTIMO');
-    drop_table('STATUSEMPRESTIMO');
-    drop_table('TIPOSMOVIMENTO');
-    drop_table('TIPOSINVESTIMENTO');
-    drop_table('STATUSCONTA');
-    drop_table('TIPOSUSUARIO');
-END;
-/
+DROP TABLE RecuperacaoSenha CASCADE CONSTRAINTS;
+DROP TABLE ParcelasEmprestimos CASCADE CONSTRAINTS;
+DROP TABLE Emprestimos CASCADE CONSTRAINTS;
+DROP TABLE Movimentacoes CASCADE CONSTRAINTS;
+DROP TABLE AplicacoesInvestimentos CASCADE CONSTRAINTS;
+DROP TABLE Contas CASCADE CONSTRAINTS;
+DROP TABLE Clientes CASCADE CONSTRAINTS;
+DROP TABLE Gerentes CASCADE CONSTRAINTS;
+DROP TABLE Telefones CASCADE CONSTRAINTS;
+DROP TABLE Enderecos CASCADE CONSTRAINTS;
+DROP TABLE Usuarios CASCADE CONSTRAINTS;
+DROP TABLE StatusParcelasEmprestimo CASCADE CONSTRAINTS;
+DROP TABLE StatusEmprestimo CASCADE CONSTRAINTS;
+DROP TABLE TiposMovimento CASCADE CONSTRAINTS;
+DROP TABLE TiposInvestimento CASCADE CONSTRAINTS;
+DROP TABLE StatusConta CASCADE CONSTRAINTS;
+DROP TABLE TiposUsuario CASCADE CONSTRAINTS;
 --============================================
 -- 2. TABELAS SECUNDÁRIAS (LOOKUP / ENUM)
 --============================================
