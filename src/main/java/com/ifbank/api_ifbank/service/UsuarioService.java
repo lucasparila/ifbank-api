@@ -19,6 +19,7 @@ import com.ifbank.api_ifbank.model.Endereco;
 import com.ifbank.api_ifbank.model.Gerente;
 import com.ifbank.api_ifbank.model.Telefone;
 import com.ifbank.api_ifbank.model.Usuario;
+import com.ifbank.api_ifbank.model.DTO.atualizar.AtualizarPerfil;
 import com.ifbank.api_ifbank.model.DTO.cadastro.CadastroClienteRequestDTO;
 import com.ifbank.api_ifbank.model.DTO.cliente.ClienteDTO;
 import com.ifbank.api_ifbank.model.DTO.cliente.ContaDTO;
@@ -240,5 +241,50 @@ public class UsuarioService implements IUsuarioService {
 	    } catch (IOException e) {
 	        throw new RuntimeException("Falha ao salvar a foto de perfil: " + e.getMessage());
 	    }
+	}
+	
+	@Override
+	@Transactional
+	public PerfilCompletoDTO atualizarPerfil(Long idUsuario, AtualizarPerfil dto) {
+
+	    usuarioRepository.findById(idUsuario)
+	            .orElseThrow(() -> new RuntimeException("Usuário não encontrado."));
+
+	    Cliente cliente = clienteRepository.findByUsuarioId(idUsuario);
+	    if (cliente == null) {
+	        throw new RuntimeException("Cliente não encontrado.");
+	    }
+
+	    // Atualiza dados 
+	    if (dto.getNome() != null) cliente.setNome(dto.getNome());
+	    if (dto.getDataNascimento() != null) cliente.setDataNascimento(dto.getDataNascimento());
+
+	    // Atualiza foto 
+	    if (dto.getFoto() != null && !dto.getFoto().isEmpty()) {
+	        String caminhoFoto = salvarFoto(dto.getFoto(), idUsuario);
+	        cliente.setFotoUrl(caminhoFoto);
+	    }
+
+	    // Atualiza endereço
+	    Endereco endereco = cliente.getEndereco();
+	    if (dto.getLogradouro() != null) endereco.setLogradouro(dto.getLogradouro());
+	    if (dto.getNumero() != null) endereco.setNumero(dto.getNumero());
+	    if (dto.getComplemento() != null) endereco.setComplemento(dto.getComplemento());
+	    if (dto.getBairro() != null) endereco.setBairro(dto.getBairro());
+	    if (dto.getCidade() != null) endereco.setCidade(dto.getCidade());
+	    if (dto.getEstado() != null) endereco.setEstado(dto.getEstado());
+	    if (dto.getCep() != null) endereco.setCep(dto.getCep());
+	    enderecoRepository.save(endereco);
+
+	    // Atualiza telefone
+	    Telefone telefone = cliente.getTelefone();
+	    if (dto.getCodPais() != null) telefone.setCodPais(dto.getCodPais());
+	    if (dto.getCodArea() != null) telefone.setCodArea(dto.getCodArea());
+	    if (dto.getNumeroTelefone() != null) telefone.setNumero(dto.getNumeroTelefone());
+	    telefoneRepository.save(telefone);
+
+	    clienteRepository.save(cliente);
+
+	    return obterPerfilCompleto(idUsuario);
 	}
 }

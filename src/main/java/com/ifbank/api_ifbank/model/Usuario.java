@@ -94,4 +94,6 @@ public class Usuario {
     public void setTipoUsuario(TipoUsuario tipoUsuario) {
         this.idTipoUsuario = tipoUsuario.getId();
     }
+    
+    
 }

@@ -15,6 +15,9 @@ import com.ifbank.api_ifbank.model.DTO.cadastro.CadastroClienteRequestDTO;
 import com.ifbank.api_ifbank.model.DTO.perfil.PerfilClienteCompletoDTO;
 import com.ifbank.api_ifbank.service.interfaces.IUsuarioService;
 
+import org.springframework.web.bind.annotation.PutMapping;
+import com.ifbank.api_ifbank.model.DTO.atualizar.AtualizarPerfil;
+
 @RestController
 @RequestMapping("/api/clientes")
 @CrossOrigin(origins = "*")
@@ -46,6 +49,17 @@ public class ClienteController {
         } catch (RuntimeException e) {
            
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getLocalizedMessage());
+        }
+    }
+    
+    @PutMapping(value = "/{idUsuario}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> atualizarPerfil(@PathVariable Long idUsuario,
+                                              @ModelAttribute AtualizarPerfil dto) {
+        try {
+            PerfilCompletoDTO perfilAtualizado = usuarioService.atualizarPerfil(idUsuario, dto);
+            return ResponseEntity.ok(perfilAtualizado);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
 }
