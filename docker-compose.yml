@@ -12,7 +12,12 @@ services:
       - oracle_data:/opt/oracle/oradata
     networks:
       - ifbank-network
-
+    healthcheck:
+      test: ["CMD", "healthcheck.sh"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+      start_period: 60s
   api-ifbank:
     build: .
     container_name: ifbank_spring_container
@@ -23,17 +28,20 @@ services:
       DB_USER: ifbank_database
       DB_PASSWORD: senha123
       UPLOAD_DIR: /app/uploads
+      MAIL_USERNAME: s.thomaz@aluno.ifsp.edu.br
+      MAIL_PASSWORD: buyz uiai elfq fref
     volumes:
       - uploads_data:/app/uploads
     depends_on:
-      - oracle-db
+      oracle-db:
+        condition: service_healthy
     networks:
       - ifbank-network
-
 volumes:
   oracle_data:
   uploads_data:
-
 networks:
   ifbank-network:
     driver: bridge
+  
+  
