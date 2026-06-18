@@ -7,23 +7,36 @@
 -- ====================================================================
 -- 1. LIMPEZA PRÉVIA PADRONIZADA EM UPPERCASE
 -- ====================================================================
-DROP TABLE RecuperacaoSenha CASCADE CONSTRAINTS;
-DROP TABLE ParcelasEmprestimos CASCADE CONSTRAINTS;
-DROP TABLE Emprestimos CASCADE CONSTRAINTS;
-DROP TABLE Movimentacoes CASCADE CONSTRAINTS;
-DROP TABLE AplicacoesInvestimentos CASCADE CONSTRAINTS;
-DROP TABLE Contas CASCADE CONSTRAINTS;
-DROP TABLE Clientes CASCADE CONSTRAINTS;
-DROP TABLE Gerentes CASCADE CONSTRAINTS;
-DROP TABLE Telefones CASCADE CONSTRAINTS;
-DROP TABLE Enderecos CASCADE CONSTRAINTS;
-DROP TABLE Usuarios CASCADE CONSTRAINTS;
-DROP TABLE StatusParcelasEmprestimo CASCADE CONSTRAINTS;
-DROP TABLE StatusEmprestimo CASCADE CONSTRAINTS;
-DROP TABLE TiposMovimento CASCADE CONSTRAINTS;
-DROP TABLE TiposInvestimento CASCADE CONSTRAINTS;
-DROP TABLE StatusConta CASCADE CONSTRAINTS;
-DROP TABLE TiposUsuario CASCADE CONSTRAINTS;
+DECLARE
+    PROCEDURE drop_table(p_table VARCHAR2) IS
+    BEGIN
+        EXECUTE IMMEDIATE 'DROP TABLE ' || p_table || ' CASCADE CONSTRAINTS';
+    EXCEPTION
+        WHEN OTHERS THEN
+            IF SQLCODE != -942 THEN
+                RAISE;
+            END IF;
+    END;
+BEGIN
+    drop_table('RECUPERACAOSENHA');
+    drop_table('PARCELASEMPRESTIMOS');
+    drop_table('EMPRESTIMOS');
+    drop_table('MOVIMENTACOES');
+    drop_table('APLICACOESINVESTIMENTOS');
+    drop_table('CONTAS');
+    drop_table('CLIENTES');
+    drop_table('GERENTES');
+    drop_table('TELEFONES');
+    drop_table('ENDERECOS');
+    drop_table('USUARIOS');
+    drop_table('STATUSPARCELASEMPRESTIMO');
+    drop_table('STATUSEMPRESTIMO');
+    drop_table('TIPOSMOVIMENTO');
+    drop_table('TIPOSINVESTIMENTO');
+    drop_table('STATUSCONTA');
+    drop_table('TIPOSUSUARIO');
+END;
+/
 --============================================
 -- 2. TABELAS SECUNDÁRIAS (LOOKUP / ENUM)
 --============================================
@@ -237,9 +250,38 @@ INSERT INTO StatusConta (nome_status) VALUES ('ATIVA');
 INSERT INTO StatusConta (nome_status) VALUES ('INATIVA');
 INSERT INTO StatusConta (nome_status) VALUES ('REJEITADA');
 
+-- ====================================================================
+-- CARGA DE ENUMS: TIPOS DE MOVIMENTO (TABELA TiposMovimento)
+-- ====================================================================
+
+-- 1. Movimentações Básicas de Caixa
+INSERT INTO TiposMovimento (tipo_movimento) VALUES ('DEPOSITO');
+INSERT INTO TiposMovimento (tipo_movimento) VALUES ('SAQUE');
+
+-- 2. Transferências entre Contas (Internas ou Externas/Pix)
+INSERT INTO TiposMovimento (tipo_movimento) VALUES ('TRANSFERENCIA_ENVIADA');
+INSERT INTO TiposMovimento (tipo_movimento) VALUES ('TRANSFERENCIA_RECEBIDA');
+
+-- 3. Movimentações de Investimentos (Fluxo da Conta para Aplicação e vice-versa)
+INSERT INTO TiposMovimento (tipo_movimento) VALUES ('APLICACAO_INVESTIMENTO');
+INSERT INTO TiposMovimento (tipo_movimento) VALUES ('RESGATE_INVESTIMENTO');
+
+-- 4. Movimentações de Empréstimos (Entrada do crédito e Pagamento das parcelas)
+INSERT INTO TiposMovimento (tipo_movimento) VALUES ('CREDITO_EMPRESTIMO');
+INSERT INTO TiposMovimento (tipo_movimento) VALUES ('PAGAMENTO_PARCELA_EMPRESTIMO');
+
+
 -- Criando Usuário Cliente Inicial (Ganha ID 1 automaticamente)
 INSERT INTO Usuarios (CPF, senha, email, id_tipo_usuario)
 VALUES ('12345678901', 'senha123', 'cliente@ifbank.com', 1);
+
+-- Criando Usuário Gerente Inicial (Ganha ID 2 automaticamente)
+INSERT INTO Usuarios (CPF, senha, email, id_tipo_usuario)
+VALUES ('55332581504', 'senha321', 'gerente@ifbank.com', 2);
+
+-- Criando Gerente associado ao usuário 2 (Ganha ID 2 automaticamente)
+INSERT INTO Gerentes(nome,data_nascimento,id_usuario)
+VALUES ('Bianca Garcia', TO_DATE('1994-02-03', 'YYYY-MM-DD'),2);
 
 -- Criando dados de Perfil associados (Ganha ID 1 em tudo automaticamente)
 INSERT INTO Enderecos (logradouro, numero, bairro, cidade, estado, cep)
@@ -272,5 +314,6 @@ INSERT INTO TiposInvestimento (nome, rentabilidade_mes, carencia_dias, valorMini
 VALUES ('Fundos', 0.010000, 30, 1000.00);
 
 COMMIT;
+
 
 

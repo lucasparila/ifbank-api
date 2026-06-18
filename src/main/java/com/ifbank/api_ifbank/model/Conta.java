@@ -1,106 +1,70 @@
 package com.ifbank.api_ifbank.model;
 
+import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
+import com.ifbank.api_ifbank.model.enums.StatusConta;
 
 @Entity
-@Table(name= "Contas")
+@Table(name = "CONTAS")
 public class Conta {
-	@Id
+
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
-	@Column(name = "numero_conta")
-	private String numeroConta;
 
-	@Column(name = "saldo")
-	private BigDecimal saldo;
+    @Column(name = "numero_conta", nullable = false, length = 10)
+    private String numeroConta;
 
-	@Column(name = "data_abertura")
-	private LocalDate dataAbertura;
+    @Column(nullable = false, precision = 10, scale = 2)
+    private BigDecimal saldo;
 
-	@Column(name = "id_status_conta")
-	private Integer idStatusConta; 
+    @Column(name = "data_abertura", nullable = false)
+    private LocalDate dataAbertura;
 
-    @OneToOne
-    @JoinColumn(name = "id_cliente", referencedColumnName = "id", nullable = false, unique = true)
-    private Cliente cliente; 
+    @Column(name = "id_status_conta", nullable = false)
+    private Integer idStatusConta;
 
-		@OneToMany(mappedBy = "conta")
-		private java.util.List<AplicacaoInvestimento> aplicacoes;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_cliente", nullable = false, unique = true)
+    private Cliente cliente;
 
-    
     public Conta() {}
 
-	public Conta(Long id, String numeroConta, BigDecimal saldo, LocalDate dataAbertura, Integer idStatusConta,
-			Cliente cliente) {
-		super();
-		this.id = id;
-		this.numeroConta = numeroConta;
-		this.saldo = saldo;
-		this.dataAbertura = dataAbertura;
-		this.idStatusConta = idStatusConta;
-		this.cliente = cliente;
-	}
+    public Conta(Long id, String numeroConta, BigDecimal saldo, LocalDate dataAbertura,
+                 Integer idStatusConta, Cliente cliente) {
+        this.id = id;
+        this.numeroConta = numeroConta;
+        this.saldo = saldo;
+        this.dataAbertura = dataAbertura;
+        this.idStatusConta = idStatusConta;
+        this.cliente = cliente;
+    }
 
-	public Long getId() {
-		return id;
-	}
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public String getNumeroConta() { return numeroConta; }
+    public void setNumeroConta(String numeroConta) { this.numeroConta = numeroConta; }
 
-	public String getNumeroConta() {
-		return numeroConta;
-	}
+    public BigDecimal getSaldo() { return saldo; }
+    public void setSaldo(BigDecimal saldo) { this.saldo = saldo; }
 
-	public void setNumeroConta(String numeroConta) {
-		this.numeroConta = numeroConta;
-	}
+    public LocalDate getDataAbertura() { return dataAbertura; }
+    public void setDataAbertura(LocalDate dataAbertura) { this.dataAbertura = dataAbertura; }
 
-	public BigDecimal getSaldo() {
-		return saldo;
-	}
+    public Integer getIdStatusConta() { return idStatusConta; }
+    public void setIdStatusConta(Integer idStatusConta) { this.idStatusConta = idStatusConta; }
 
-	public void setSaldo(BigDecimal saldo) {
-		this.saldo = saldo;
-	}
+    @Transient
+    public StatusConta getStatusConta() {
+        return StatusConta.fromId(this.idStatusConta);
+    }
 
-	public LocalDate getDataAbertura() {
-		return dataAbertura;
-	}
+    public void setStatusConta(StatusConta status) {
+        this.idStatusConta = status.getId();
+    }
 
-	public void setDataAbertura(LocalDate dataAbertura) {
-		this.dataAbertura = dataAbertura;
-	}
-
-	public Integer getIdStatusConta() {
-		return idStatusConta;
-	}
-
-	public void setIdStatusConta(Integer idStatusConta) {
-		this.idStatusConta = idStatusConta;
-	}
-
-	public Cliente getCliente() {
-		return cliente;
-	}
-
-	
-	public void setCliente(Cliente cliente) {
-		this.cliente = cliente;
-	}
-    
-    
+    public Cliente getCliente() { return cliente; }
+    public void setCliente(Cliente cliente) { this.cliente = cliente; }
 }

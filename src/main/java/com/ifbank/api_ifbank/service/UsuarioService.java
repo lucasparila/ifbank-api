@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.ifbank.api_ifbank.model.Cliente;
 import com.ifbank.api_ifbank.model.Conta;
 import com.ifbank.api_ifbank.model.Endereco;
+import com.ifbank.api_ifbank.model.Gerente;
 import com.ifbank.api_ifbank.model.Telefone;
 import com.ifbank.api_ifbank.model.Usuario;
 import com.ifbank.api_ifbank.model.DTO.atualizar.AtualizarPerfil;
@@ -26,17 +27,22 @@ import com.ifbank.api_ifbank.model.DTO.cliente.EnderecoDTO;
 import com.ifbank.api_ifbank.model.DTO.cliente.TelefoneDTO;
 import com.ifbank.api_ifbank.model.DTO.login.LoginRequestDTO;
 import com.ifbank.api_ifbank.model.DTO.login.LoginResponseDTO;
-import com.ifbank.api_ifbank.model.DTO.perfil.PerfilCompletoDTO;
+import com.ifbank.api_ifbank.model.DTO.perfil.PerfilClienteCompletoDTO;
+import com.ifbank.api_ifbank.model.enums.StatusConta;
+import com.ifbank.api_ifbank.model.enums.TipoUsuario;
 import com.ifbank.api_ifbank.repository.ClienteRepository;
 import com.ifbank.api_ifbank.repository.ContaRepository;
 import com.ifbank.api_ifbank.repository.EnderecoRepository;
+import com.ifbank.api_ifbank.repository.GerenteRepository;
 import com.ifbank.api_ifbank.repository.TelefoneRepository;
 import com.ifbank.api_ifbank.repository.UsuarioRepository;
 import com.ifbank.api_ifbank.service.interfaces.IUsuarioService;
 
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
+@Slf4j
 public class UsuarioService implements IUsuarioService {
 
 	@Value("${app.upload.dir}")
@@ -47,8 +53,9 @@ public class UsuarioService implements IUsuarioService {
 	private TelefoneRepository telefoneRepository;
 	private ClienteRepository clienteRepository;
 	private ContaRepository contaRepository;
+	private GerenteRepository gerenteRepository;
 	
-	public UsuarioService(UsuarioRepository usuarioRepository,EnderecoRepository enderecoRepository,TelefoneRepository telefoneRepository,ClienteRepository clienteRepository,ContaRepository contaRepository) 
+	public UsuarioService(UsuarioRepository usuarioRepository,EnderecoRepository enderecoRepository,TelefoneRepository telefoneRepository,ClienteRepository clienteRepository,ContaRepository contaRepository,GerenteRepository gerenteRepository) 
 		{
 		
 			this.usuarioRepository = usuarioRepository;
@@ -56,6 +63,7 @@ public class UsuarioService implements IUsuarioService {
 			this.telefoneRepository = telefoneRepository;
 			this.clienteRepository = clienteRepository;
 			this.contaRepository = contaRepository;
+			this.gerenteRepository = gerenteRepository;
 		}
 
 	@Override
@@ -69,7 +77,29 @@ public class UsuarioService implements IUsuarioService {
         if (!usuario.getSenha().equals(dadosLogin.getSenha())) {
         	throw new RuntimeException("Senha incorreta.");
         }
-
+        
+        if(usuario.getTipoUsuario().name() == TipoUsuario.CLIENTE.name()) {
+        	Cliente cliente = clienteRepository.findByUsuarioId(usuario.getId());
+            if(cliente == null) {
+            	throw new RuntimeException("Cliente não encontrado.");
+            }
+            
+            Conta conta = contaRepository.findByClienteId(cliente.getId());
+            
+            if(conta == null) {
+            	throw new RuntimeException("Conta não encontrado.");
+            }
+            
+            if(conta.getStatusConta().equals(StatusConta.PENDENTE)) {
+            	throw new RuntimeException("Sua conta está pendente de aprovação.");
+            }
+        }else {
+        	Gerente gerente = gerenteRepository.findByUsuarioId(usuario.getId());
+            if(gerente == null) {
+            	throw new RuntimeException("Gerente não encontrado.");
+            }
+        }
+        
         return new LoginResponseDTO(usuario.getId(), usuario.getCpf(), usuario.getEmail(),usuario.getTipoUsuario().name());
      
     }
@@ -95,7 +125,7 @@ public class UsuarioService implements IUsuarioService {
         usuario.setCpf(dto.getCpf());
         usuario.setEmail(dto.getEmail());
         usuario.setSenha(dto.getSenha()); 
-        usuario.setIdTipoUsuario(1l); // 1 = CLIENTE
+        usuario.setIdTipoUsuario(TipoUsuario.CLIENTE.getId());
         usuario = usuarioRepository.save(usuario);
         
         String caminhoFoto = null;
@@ -130,7 +160,7 @@ public class UsuarioService implements IUsuarioService {
         conta.setNumeroConta(numeroContaGerado);
         conta.setSaldo(BigDecimal.ZERO); 
         conta.setDataAbertura(LocalDate.now());
-        conta.setIdStatusConta(1); // 1 = PENDENTE (Aguardando aprovação do gerente)
+        conta.setIdStatusConta(StatusConta.PENDENTE.getId()); 
         conta.setCliente(cliente);
         contaRepository.save(conta);
 
@@ -138,7 +168,7 @@ public class UsuarioService implements IUsuarioService {
     }
     
 	@Override
-    public PerfilCompletoDTO obterPerfilCompleto(Long idUsuario) {
+    public PerfilClienteCompletoDTO obterPerfilCompleto(Long idUsuario) {
         Usuario usuario = usuarioRepository.findById(idUsuario)
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado."));
 
@@ -148,6 +178,7 @@ public class UsuarioService implements IUsuarioService {
         }
 
         Conta conta = contaRepository.findByClienteId(cliente.getId());
+       
 
         // Instancia os sub-DTOs de Contato e Localização
         EnderecoDTO enderecoDTO = null;
@@ -168,11 +199,11 @@ public class UsuarioService implements IUsuarioService {
         // Monta o ContaDTO
         ContaDTO contaDTO = null;
         if (conta != null) {
-            contaDTO = new ContaDTO(conta.getId(), conta.getNumeroConta(), conta.getSaldo(), conta.getDataAbertura(), conta.getIdStatusConta());
+            contaDTO = new ContaDTO(conta.getId(), conta.getNumeroConta(), conta.getSaldo(), conta.getDataAbertura(), conta.getStatusConta().name());
         }
 
         // Monta PerfilCompletoDTO
-        PerfilCompletoDTO perfil = new PerfilCompletoDTO(
+        PerfilClienteCompletoDTO perfil = new PerfilClienteCompletoDTO(
         		    usuario.getId(),
         	        usuario.getEmail(),
         	        usuario.getCpf(),
@@ -180,8 +211,6 @@ public class UsuarioService implements IUsuarioService {
         	        clienteDTO,
         	        contaDTO
         		);
-       
-
         return perfil;
     }
 	

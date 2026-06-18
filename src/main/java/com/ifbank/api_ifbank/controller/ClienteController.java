@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ifbank.api_ifbank.model.DTO.cadastro.CadastroClienteRequestDTO;
-import com.ifbank.api_ifbank.model.DTO.perfil.PerfilCompletoDTO;
+import com.ifbank.api_ifbank.model.DTO.perfil.PerfilClienteCompletoDTO;
 import com.ifbank.api_ifbank.service.interfaces.IUsuarioService;
 
 import org.springframework.web.bind.annotation.PutMapping;
@@ -42,7 +42,7 @@ public class ClienteController {
     @GetMapping("/{idUsuario}")
     public ResponseEntity<?> obterPerfil(@PathVariable Long idUsuario) {
         try {
-            PerfilCompletoDTO perfilCompleto = usuarioService.obterPerfilCompleto(idUsuario);
+            PerfilClienteCompletoDTO perfilCompleto = usuarioService.obterPerfilCompleto(idUsuario);
            
             return ResponseEntity.ok(perfilCompleto);
             

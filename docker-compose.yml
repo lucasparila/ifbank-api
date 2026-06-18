@@ -1,3 +1,4 @@
+version: '3.9'
 services:
   oracle-db:
     image: gvenzl/oracle-free:23-slim
@@ -10,16 +11,20 @@ services:
       APP_USER_PASSWORD: senha123
     volumes:
       - oracle_data:/opt/oracle/oradata
-    networks:
-      - ifbank-network
+      - ./src/main/resources/schema.sql:/container-entrypoint-initdb.d/schema.sql:ro
     healthcheck:
       test: ["CMD", "healthcheck.sh"]
       interval: 10s
       timeout: 5s
       retries: 20
       start_period: 60s
+    restart: unless-stopped
+    networks:
+      - ifbank-network
   api-ifbank:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
     container_name: ifbank_spring_container
     ports:
       - "8080:8080"
@@ -35,6 +40,7 @@ services:
     depends_on:
       oracle-db:
         condition: service_healthy
+    restart: unless-stopped
     networks:
       - ifbank-network
 volumes:
@@ -43,5 +49,3 @@ volumes:
 networks:
   ifbank-network:
     driver: bridge
-  
-  
