@@ -245,7 +245,7 @@ public class UsuarioService implements IUsuarioService {
 	
 	@Override
 	@Transactional
-	public PerfilCompletoDTO atualizarPerfil(Long idUsuario, AtualizarPerfil dto) {
+	public PerfilClienteCompletoDTO atualizarPerfil(Long idUsuario, AtualizarPerfil dto) {
 
 	    usuarioRepository.findById(idUsuario)
 	            .orElseThrow(() -> new RuntimeException("Usuário não encontrado."));

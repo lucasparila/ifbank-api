@@ -56,7 +56,7 @@ public class ClienteController {
     public ResponseEntity<?> atualizarPerfil(@PathVariable Long idUsuario,
                                               @ModelAttribute AtualizarPerfil dto) {
         try {
-            PerfilCompletoDTO perfilAtualizado = usuarioService.atualizarPerfil(idUsuario, dto);
+            PerfilClienteCompletoDTO perfilAtualizado = usuarioService.atualizarPerfil(idUsuario, dto);
             return ResponseEntity.ok(perfilAtualizado);
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
