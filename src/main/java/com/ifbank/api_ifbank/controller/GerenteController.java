@@ -42,6 +42,16 @@ public class GerenteController {
         }
     }
     
+    @PutMapping("/reprovar-conta/{idConta}")
+    public ResponseEntity<?> reprovarConta(@PathVariable Long idConta) {
+        try {
+            gerenteService.reprovarContaCliente(idConta);
+            return ResponseEntity.ok("Conta reprovada com sucesso!");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+    
     @GetMapping("/{idUsuario}")
     public ResponseEntity<?> obterPerfil(@PathVariable Long idUsuario) {
         try {

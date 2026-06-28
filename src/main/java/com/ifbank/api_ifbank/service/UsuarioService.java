@@ -36,8 +36,10 @@ import com.ifbank.api_ifbank.repository.EnderecoRepository;
 import com.ifbank.api_ifbank.repository.GerenteRepository;
 import com.ifbank.api_ifbank.repository.TelefoneRepository;
 import com.ifbank.api_ifbank.repository.UsuarioRepository;
+import com.ifbank.api_ifbank.service.interfaces.IEmailService;
 import com.ifbank.api_ifbank.service.interfaces.IUsuarioService;
 
+import jakarta.mail.MessagingException;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 
@@ -54,8 +56,9 @@ public class UsuarioService implements IUsuarioService {
 	private ClienteRepository clienteRepository;
 	private ContaRepository contaRepository;
 	private GerenteRepository gerenteRepository;
+	private IEmailService emailService; 
 	
-	public UsuarioService(UsuarioRepository usuarioRepository,EnderecoRepository enderecoRepository,TelefoneRepository telefoneRepository,ClienteRepository clienteRepository,ContaRepository contaRepository,GerenteRepository gerenteRepository) 
+	public UsuarioService(UsuarioRepository usuarioRepository,EnderecoRepository enderecoRepository,TelefoneRepository telefoneRepository,ClienteRepository clienteRepository,ContaRepository contaRepository,GerenteRepository gerenteRepository,IEmailService emailService) 
 		{
 		
 			this.usuarioRepository = usuarioRepository;
@@ -64,6 +67,7 @@ public class UsuarioService implements IUsuarioService {
 			this.clienteRepository = clienteRepository;
 			this.contaRepository = contaRepository;
 			this.gerenteRepository = gerenteRepository;
+			this.emailService = emailService;
 		}
 
 	@Override
@@ -163,7 +167,9 @@ public class UsuarioService implements IUsuarioService {
         conta.setIdStatusConta(StatusConta.PENDENTE.getId()); 
         conta.setCliente(cliente);
         contaRepository.save(conta);
-
+        
+        emailService.enviarEmailCadastro(cliente, usuario.getEmail());    
+        
         return "Cliente cadastrado com sucesso! Conta criada em análise: " + numeroContaGerado;
     }
     

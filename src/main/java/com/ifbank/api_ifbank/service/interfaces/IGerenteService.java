@@ -8,5 +8,6 @@ import com.ifbank.api_ifbank.model.DTO.perfil.PerfilGerenteCompletoDTO;
 public interface IGerenteService {
 	 public List<PerfilClienteCompletoDTO> buscarContasPendentes();
 	 public void aprovarContaCliente(Long idUsuario);
-	 PerfilGerenteCompletoDTO obterPerfilCompleto(Long idUsuario);
+	 public PerfilGerenteCompletoDTO obterPerfilCompleto(Long idUsuario);
+	 public void reprovarContaCliente(Long idConta);
 }
