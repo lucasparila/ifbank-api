@@ -1,5 +1,6 @@
 package com.ifbank.api_ifbank.service.interfaces;
 
+import com.ifbank.api_ifbank.model.DTO.extrato.ExtratoPdfResponseDTO;
 import com.ifbank.api_ifbank.model.DTO.movimentacao.MovimentacaoRequestDTO;
 import com.ifbank.api_ifbank.model.DTO.movimentacao.MovimentacaoResponseDTO;
 import com.ifbank.api_ifbank.model.DTO.movimentacao.TransferenciaRequestDTO;
@@ -14,4 +15,5 @@ public interface IMovimentacaoService {
     MovimentacaoResponseDTO transferir(TransferenciaRequestDTO dto);
     List<MovimentacaoResponseDTO> listarPorConta(Long idConta);
     Page<MovimentacaoResponseDTO> buscarExtrato(Long idConta, String nome, BigDecimal valor, int pagina, int tamanho, String ordenacao, String direcao);
+    ExtratoPdfResponseDTO montarExtratoPdf(Long idConta,String nome,BigDecimal valor, String ordenacao,String direcao);
 }
