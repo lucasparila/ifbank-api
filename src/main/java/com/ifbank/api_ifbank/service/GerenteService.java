@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import com.ifbank.api_ifbank.model.Cliente;
 import com.ifbank.api_ifbank.model.Conta;
 import com.ifbank.api_ifbank.model.Gerente;
 import com.ifbank.api_ifbank.model.Usuario;
@@ -16,22 +17,27 @@ import com.ifbank.api_ifbank.model.DTO.gerente.GerenteDTO;
 import com.ifbank.api_ifbank.model.DTO.perfil.PerfilClienteCompletoDTO;
 import com.ifbank.api_ifbank.model.DTO.perfil.PerfilGerenteCompletoDTO;
 import com.ifbank.api_ifbank.model.enums.StatusConta;
+import com.ifbank.api_ifbank.repository.ClienteRepository;
 import com.ifbank.api_ifbank.repository.ContaRepository;
 import com.ifbank.api_ifbank.repository.GerenteRepository;
 import com.ifbank.api_ifbank.repository.UsuarioRepository;
+import com.ifbank.api_ifbank.service.interfaces.IEmailService;
 import com.ifbank.api_ifbank.service.interfaces.IGerenteService;
 
 @Service
 public class GerenteService implements IGerenteService {
 	
+
 	private final ContaRepository contaRepository;
 	private final UsuarioRepository usuarioRepository;
 	private final GerenteRepository gerenteRepository;
+	private final IEmailService emailService;
 	
-	public GerenteService(ContaRepository contaRepository,UsuarioRepository usuarioRepository,GerenteRepository gerenteRepository) {
+	public GerenteService(ContaRepository contaRepository,UsuarioRepository usuarioRepository,GerenteRepository gerenteRepository,IEmailService emailService) {
 		this.contaRepository = contaRepository;
 		this.usuarioRepository = usuarioRepository;
 		this.gerenteRepository = gerenteRepository;
+		this.emailService = emailService;
 	}
 
     @Override
@@ -102,8 +108,23 @@ public class GerenteService implements IGerenteService {
 
         conta.setIdStatusConta(StatusConta.ATIVA.getId());
         contaRepository.save(conta);
+        emailService.enviarEmailContaAprovada(conta.getCliente(),conta,conta.getCliente().getUsuario().getEmail());
     }
 
+    @Override
+    public void reprovarContaCliente(Long idConta) {
+        Conta conta = contaRepository.findById(idConta)
+                .orElseThrow(() -> new RuntimeException("Conta não encontrada."));
+
+        if (!conta.getStatusConta().equals(StatusConta.PENDENTE)) {
+            throw new RuntimeException("Conta não está mais pendente. Status atual: " 
+                    + conta.getStatusConta().name());
+        }
+
+        conta.setIdStatusConta(StatusConta.REJEITADA.getId());
+        contaRepository.save(conta);
+        emailService.enviarEmailContaReprovada(conta.getCliente(),conta.getCliente().getUsuario().getEmail());
+    }
 	@Override
 	public PerfilGerenteCompletoDTO obterPerfilCompleto(Long idUsuario) {
 		
