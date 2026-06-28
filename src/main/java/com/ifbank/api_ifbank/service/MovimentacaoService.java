@@ -2,6 +2,7 @@ package com.ifbank.api_ifbank.service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import com.ifbank.api_ifbank.model.Conta;
 import com.ifbank.api_ifbank.model.Movimentacao;
+import com.ifbank.api_ifbank.model.DTO.extrato.ExtratoPdfResponseDTO;
 import com.ifbank.api_ifbank.model.DTO.movimentacao.MovimentacaoRequestDTO;
 import com.ifbank.api_ifbank.model.DTO.movimentacao.MovimentacaoResponseDTO;
 import com.ifbank.api_ifbank.model.DTO.movimentacao.TransferenciaRequestDTO;
@@ -246,6 +248,46 @@ public class MovimentacaoService implements IMovimentacaoService {
 
         return page.map(this::mapToResponse);
     }
+    
+    public ExtratoPdfResponseDTO montarExtratoPdf(Long idConta,String nome,BigDecimal valor,String ordenacao, String direcao) {
+    	
+    	String sortField = "dataMovimento";
+
+    	if (ordenacao != null && !ordenacao.isBlank()) {
+    	    if (ordenacao.equals("valor")
+    	            || ordenacao.equals("tipoMovimento")
+    	            || ordenacao.equals("dataMovimento")) {
+
+    	        sortField = ordenacao;
+    	    }
+    	}
+
+    	Sort.Direction direction = Sort.Direction
+    	        .fromOptionalString(direcao)
+    	        .orElse(Sort.Direction.DESC);
+
+    	Sort sort = Sort.by(direction, sortField);
+    	
+		Conta conta = contaRepository.findById(idConta)
+		.orElseThrow(() -> new RuntimeException("Conta não encontrada."));
+		
+		List<Movimentacao> movimentacoes = movimentacaoRepository.buscarPorContaNomeOuValorPdf(idConta,(nome == null || nome.isBlank()) ? null : nome,valor, sort);
+		
+		List<MovimentacaoResponseDTO> movimentacoesDTO = movimentacoes
+		.stream()
+		.map(this::mapToResponse)
+		.toList();
+		
+		ExtratoPdfResponseDTO dto = new ExtratoPdfResponseDTO();
+		
+		dto.setNomeTitular(conta.getCliente().getNome());
+		dto.setNumeroConta(conta.getNumeroConta());
+		dto.setSaldoAtual(conta.getSaldo());
+		dto.setDataEmissao(LocalDateTime.now());
+		dto.setMovimentacoes(movimentacoesDTO);
+		
+		return dto;
+	}
 
     private MovimentacaoResponseDTO mapToResponse(Movimentacao mov) {
         MovimentacaoResponseDTO dto = new MovimentacaoResponseDTO();
@@ -264,4 +306,5 @@ public class MovimentacaoService implements IMovimentacaoService {
         }
         return dto;
     }
+ 
 }
