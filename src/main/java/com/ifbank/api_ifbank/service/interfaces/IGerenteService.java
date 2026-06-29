@@ -1,13 +1,19 @@
 package com.ifbank.api_ifbank.service.interfaces;
 
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import com.ifbank.api_ifbank.model.DTO.perfil.PerfilClienteCompletoDTO;
 import com.ifbank.api_ifbank.model.DTO.perfil.PerfilGerenteCompletoDTO;
+import com.ifbank.api_ifbank.model.enums.StatusConta;
 
 public interface IGerenteService {
-	 public List<PerfilClienteCompletoDTO> buscarContasPendentes();
-	 public void aprovarContaCliente(Long idUsuario);
-	 public PerfilGerenteCompletoDTO obterPerfilCompleto(Long idUsuario);
-	 public void reprovarContaCliente(Long idConta);
+
+	Page<PerfilClienteCompletoDTO> buscarContasPorStatus(StatusConta status, Pageable pageable);
+
+	void aprovarContaCliente(Long idConta);
+
+	void reprovarContaCliente(Long idConta);
+
+	PerfilGerenteCompletoDTO obterPerfilCompleto(Long idUsuario);
 }

@@ -39,7 +39,6 @@ import com.ifbank.api_ifbank.repository.UsuarioRepository;
 import com.ifbank.api_ifbank.service.interfaces.IEmailService;
 import com.ifbank.api_ifbank.service.interfaces.IUsuarioService;
 
-import jakarta.mail.MessagingException;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 
@@ -71,42 +70,48 @@ public class UsuarioService implements IUsuarioService {
 		}
 
 	@Override
-    public LoginResponseDTO autenticar(LoginRequestDTO dadosLogin) {
-        
-        Usuario usuario = usuarioRepository.findByEmail(dadosLogin.getEmail());
-        
-        if(usuario == null) {
-        	throw new RuntimeException("Usuário não encontrado.");
-        }
-        if (!usuario.getSenha().equals(dadosLogin.getSenha())) {
-        	throw new RuntimeException("Senha incorreta.");
-        }
-        
-        if(usuario.getTipoUsuario().name() == TipoUsuario.CLIENTE.name()) {
-        	Cliente cliente = clienteRepository.findByUsuarioId(usuario.getId());
-            if(cliente == null) {
-            	throw new RuntimeException("Cliente não encontrado.");
-            }
-            
-            Conta conta = contaRepository.findByClienteId(cliente.getId());
-            
-            if(conta == null) {
-            	throw new RuntimeException("Conta não encontrado.");
-            }
-            
-            if(conta.getStatusConta().equals(StatusConta.PENDENTE)) {
-            	throw new RuntimeException("Sua conta está pendente de aprovação.");
-            }
-        }else {
-        	Gerente gerente = gerenteRepository.findByUsuarioId(usuario.getId());
-            if(gerente == null) {
-            	throw new RuntimeException("Gerente não encontrado.");
-            }
-        }
-        
-        return new LoginResponseDTO(usuario.getId(), usuario.getCpf(), usuario.getEmail(),usuario.getTipoUsuario().name());
-     
-    }
+	public LoginResponseDTO autenticar(LoginRequestDTO dadosLogin) {
+
+	    Usuario usuario = usuarioRepository.findByEmail(dadosLogin.getEmail());
+
+	    if (usuario == null) {
+	        throw new RuntimeException("Usuário não encontrado.");
+	    }
+	    if (!usuario.getSenha().equals(dadosLogin.getSenha())) {
+	        throw new RuntimeException("Senha incorreta.");
+	    }
+
+	    if (usuario.getTipoUsuario().equals(TipoUsuario.CLIENTE)) {
+	        Cliente cliente = clienteRepository.findByUsuarioId(usuario.getId());
+	        if (cliente == null) {
+	            throw new RuntimeException("Cliente não encontrado.");
+	        }
+
+	        Conta conta = contaRepository.findByClienteId(cliente.getId());
+
+	        if (conta == null) {
+	            throw new RuntimeException("Conta não encontrada.");
+	        }
+
+	        switch (conta.getStatusConta()) {
+	            case PENDENTE:
+	                throw new RuntimeException("Sua conta está pendente de aprovação.");
+	            case INATIVA:
+	                throw new RuntimeException("Sua conta está inativa.");
+	            case REJEITADA:
+	                throw new RuntimeException("Sua conta foi rejeitada.");
+	            case ATIVA:
+	                break;
+	        }
+	    } else {
+	        Gerente gerente = gerenteRepository.findByUsuarioId(usuario.getId());
+	        if (gerente == null) {
+	            throw new RuntimeException("Gerente não encontrado.");
+	        }
+	    }
+
+	    return new LoginResponseDTO(usuario.getId(), usuario.getCpf(), usuario.getEmail(), usuario.getTipoUsuario().name());
+	}
     
 	@Override
     @Transactional 

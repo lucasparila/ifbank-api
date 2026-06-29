@@ -24,19 +24,22 @@ public class LoginController {
     @PostMapping("/login")
     public ResponseEntity<?> loginSimples(@RequestBody LoginRequestDTO dadosLogin) {
         try {
-           
+
             LoginResponseDTO resposta = usuarioService.autenticar(dadosLogin);
             return ResponseEntity.ok(resposta);
-            
+
         } catch (RuntimeException e) {
-            if (e.getMessage().contains("Senha")) {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+            String mensagem = e.getMessage();
+
+            if (mensagem.contains("Senha")) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(mensagem);
             }
-            
-            if(e.getMessage().contains("pendente")) {
-            	return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+
+            if (mensagem.contains("pendente") || mensagem.contains("inativa") || mensagem.contains("rejeitada")) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(mensagem);
             }
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(mensagem);
         }
     }
 }

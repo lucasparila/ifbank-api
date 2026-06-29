@@ -300,6 +300,329 @@ VALUES ('Tesouro Direto', 0.007200, 0, 30.00);
 INSERT INTO TiposInvestimento (nome, rentabilidade_mes, carencia_dias, valorMinimo)
 VALUES ('Fundos', 0.010000, 30, 1000.00);
 
+-- ====================================================================
+-- INSERTS DE CLIENTES FICTICIOS PARA DEMONSTRACAO (52 registros)
+-- Compativel com Spring Boot ScriptUtils (SQL puro, sem PL/SQL)
+-- Cada bloco: Usuario -> Endereco -> Telefone -> Cliente -> Conta
+-- Chaves de busca: CPF unico, numero de telefone unico, CEP unico por linha
+-- ====================================================================
+
+-- ============ STATUS: PENDENTE (id_status_conta = 1) ============
+INSERT INTO Usuarios (CPF, senha, email, id_tipo_usuario) VALUES ('90000000001', 'senha123', 'cliente.pendente.1@ifbank.com', 1);
+INSERT INTO Enderecos (logradouro, numero, bairro, cidade, estado, cep) VALUES ('Rua Ficticia, 101', 101, 'Centro', 'Araraquara', 'SP', '14800-001');
+INSERT INTO Telefones (cod_pais, cod_area, numero) VALUES (55, 16, 990000001);
+INSERT INTO Clientes (nome, data_nascimento, data_cadastro, foto_url, id_usuario, id_endereco, id_telefone) VALUES ('Ana Beatriz Souza', TO_DATE('1990-01-01','YYYY-MM-DD') + 30, SYSDATE - 2, 'https://i.pravatar.cc/150?img=2', (SELECT id FROM Usuarios WHERE CPF = '90000000001'), (SELECT id FROM Enderecos WHERE cep = '14800-001'), (SELECT id FROM Telefones WHERE numero = 990000001));
+INSERT INTO Contas (numero_conta, saldo, data_abertura, id_status_conta, id_cliente) VALUES ('20001-2', 0.00, SYSDATE - 2, 1, (SELECT c.id FROM Clientes c JOIN Usuarios u ON c.id_usuario = u.id WHERE u.CPF = '90000000001'));
+
+INSERT INTO Usuarios (CPF, senha, email, id_tipo_usuario) VALUES ('90000000002', 'senha123', 'cliente.pendente.2@ifbank.com', 1);
+INSERT INTO Enderecos (logradouro, numero, bairro, cidade, estado, cep) VALUES ('Rua Ficticia, 102', 102, 'Centro', 'Sao Carlos', 'SP', '14800-002');
+INSERT INTO Telefones (cod_pais, cod_area, numero) VALUES (55, 16, 990000002);
+INSERT INTO Clientes (nome, data_nascimento, data_cadastro, foto_url, id_usuario, id_endereco, id_telefone) VALUES ('Carlos Eduardo Lima', TO_DATE('1990-01-01','YYYY-MM-DD') + 60, SYSDATE - 4, 'https://i.pravatar.cc/150?img=3', (SELECT id FROM Usuarios WHERE CPF = '90000000002'), (SELECT id FROM Enderecos WHERE cep = '14800-002'), (SELECT id FROM Telefones WHERE numero = 990000002));
+INSERT INTO Contas (numero_conta, saldo, data_abertura, id_status_conta, id_cliente) VALUES ('20002-3', 0.00, SYSDATE - 4, 1, (SELECT c.id FROM Clientes c JOIN Usuarios u ON c.id_usuario = u.id WHERE u.CPF = '90000000002'));
+
+INSERT INTO Usuarios (CPF, senha, email, id_tipo_usuario) VALUES ('90000000003', 'senha123', 'cliente.pendente.3@ifbank.com', 1);
+INSERT INTO Enderecos (logradouro, numero, bairro, cidade, estado, cep) VALUES ('Rua Ficticia, 103', 103, 'Centro', 'Ribeirao Preto', 'SP', '14800-003');
+INSERT INTO Telefones (cod_pais, cod_area, numero) VALUES (55, 16, 990000003);
+INSERT INTO Clientes (nome, data_nascimento, data_cadastro, foto_url, id_usuario, id_endereco, id_telefone) VALUES ('Fernanda Oliveira', TO_DATE('1990-01-01','YYYY-MM-DD') + 90, SYSDATE - 6, 'https://i.pravatar.cc/150?img=4', (SELECT id FROM Usuarios WHERE CPF = '90000000003'), (SELECT id FROM Enderecos WHERE cep = '14800-003'), (SELECT id FROM Telefones WHERE numero = 990000003));
+INSERT INTO Contas (numero_conta, saldo, data_abertura, id_status_conta, id_cliente) VALUES ('20003-4', 0.00, SYSDATE - 6, 1, (SELECT c.id FROM Clientes c JOIN Usuarios u ON c.id_usuario = u.id WHERE u.CPF = '90000000003'));
+
+INSERT INTO Usuarios (CPF, senha, email, id_tipo_usuario) VALUES ('90000000004', 'senha123', 'cliente.pendente.4@ifbank.com', 1);
+INSERT INTO Enderecos (logradouro, numero, bairro, cidade, estado, cep) VALUES ('Rua Ficticia, 104', 104, 'Centro', 'Bauru', 'SP', '14800-004');
+INSERT INTO Telefones (cod_pais, cod_area, numero) VALUES (55, 16, 990000004);
+INSERT INTO Clientes (nome, data_nascimento, data_cadastro, foto_url, id_usuario, id_endereco, id_telefone) VALUES ('Gustavo Henrique Alves', TO_DATE('1990-01-01','YYYY-MM-DD') + 120, SYSDATE - 8, 'https://i.pravatar.cc/150?img=5', (SELECT id FROM Usuarios WHERE CPF = '90000000004'), (SELECT id FROM Enderecos WHERE cep = '14800-004'), (SELECT id FROM Telefones WHERE numero = 990000004));
+INSERT INTO Contas (numero_conta, saldo, data_abertura, id_status_conta, id_cliente) VALUES ('20004-5', 0.00, SYSDATE - 8, 1, (SELECT c.id FROM Clientes c JOIN Usuarios u ON c.id_usuario = u.id WHERE u.CPF = '90000000004'));
+
+INSERT INTO Usuarios (CPF, senha, email, id_tipo_usuario) VALUES ('90000000005', 'senha123', 'cliente.pendente.5@ifbank.com', 1);
+INSERT INTO Enderecos (logradouro, numero, bairro, cidade, estado, cep) VALUES ('Rua Ficticia, 105', 105, 'Centro', 'Sorocaba', 'SP', '14800-005');
+INSERT INTO Telefones (cod_pais, cod_area, numero) VALUES (55, 16, 990000005);
+INSERT INTO Clientes (nome, data_nascimento, data_cadastro, foto_url, id_usuario, id_endereco, id_telefone) VALUES ('Juliana Pereira Santos', TO_DATE('1990-01-01','YYYY-MM-DD') + 150, SYSDATE - 10, 'https://i.pravatar.cc/150?img=6', (SELECT id FROM Usuarios WHERE CPF = '90000000005'), (SELECT id FROM Enderecos WHERE cep = '14800-005'), (SELECT id FROM Telefones WHERE numero = 990000005));
+INSERT INTO Contas (numero_conta, saldo, data_abertura, id_status_conta, id_cliente) VALUES ('20005-6', 0.00, SYSDATE - 10, 1, (SELECT c.id FROM Clientes c JOIN Usuarios u ON c.id_usuario = u.id WHERE u.CPF = '90000000005'));
+
+INSERT INTO Usuarios (CPF, senha, email, id_tipo_usuario) VALUES ('90000000006', 'senha123', 'cliente.pendente.6@ifbank.com', 1);
+INSERT INTO Enderecos (logradouro, numero, bairro, cidade, estado, cep) VALUES ('Rua Ficticia, 106', 106, 'Centro', 'Campinas', 'SP', '14800-006');
+INSERT INTO Telefones (cod_pais, cod_area, numero) VALUES (55, 16, 990000006);
+INSERT INTO Clientes (nome, data_nascimento, data_cadastro, foto_url, id_usuario, id_endereco, id_telefone) VALUES ('Lucas Gabriel Costa', TO_DATE('1990-01-01','YYYY-MM-DD') + 180, SYSDATE - 12, 'https://i.pravatar.cc/150?img=7', (SELECT id FROM Usuarios WHERE CPF = '90000000006'), (SELECT id FROM Enderecos WHERE cep = '14800-006'), (SELECT id FROM Telefones WHERE numero = 990000006));
+INSERT INTO Contas (numero_conta, saldo, data_abertura, id_status_conta, id_cliente) VALUES ('20006-7', 0.00, SYSDATE - 12, 1, (SELECT c.id FROM Clientes c JOIN Usuarios u ON c.id_usuario = u.id WHERE u.CPF = '90000000006'));
+
+INSERT INTO Usuarios (CPF, senha, email, id_tipo_usuario) VALUES ('90000000007', 'senha123', 'cliente.pendente.7@ifbank.com', 1);
+INSERT INTO Enderecos (logradouro, numero, bairro, cidade, estado, cep) VALUES ('Rua Ficticia, 107', 107, 'Centro', 'Jundiai', 'SP', '14800-007');
+INSERT INTO Telefones (cod_pais, cod_area, numero) VALUES (55, 16, 990000007);
+INSERT INTO Clientes (nome, data_nascimento, data_cadastro, foto_url, id_usuario, id_endereco, id_telefone) VALUES ('Mariana Ferreira Dias', TO_DATE('1990-01-01','YYYY-MM-DD') + 210, SYSDATE - 14, 'https://i.pravatar.cc/150?img=8', (SELECT id FROM Usuarios WHERE CPF = '90000000007'), (SELECT id FROM Enderecos WHERE cep = '14800-007'), (SELECT id FROM Telefones WHERE numero = 990000007));
+INSERT INTO Contas (numero_conta, saldo, data_abertura, id_status_conta, id_cliente) VALUES ('20007-8', 0.00, SYSDATE - 14, 1, (SELECT c.id FROM Clientes c JOIN Usuarios u ON c.id_usuario = u.id WHERE u.CPF = '90000000007'));
+
+INSERT INTO Usuarios (CPF, senha, email, id_tipo_usuario) VALUES ('90000000008', 'senha123', 'cliente.pendente.8@ifbank.com', 1);
+INSERT INTO Enderecos (logradouro, numero, bairro, cidade, estado, cep) VALUES ('Rua Ficticia, 108', 108, 'Centro', 'Piracicaba', 'SP', '14800-008');
+INSERT INTO Telefones (cod_pais, cod_area, numero) VALUES (55, 16, 990000008);
+INSERT INTO Clientes (nome, data_nascimento, data_cadastro, foto_url, id_usuario, id_endereco, id_telefone) VALUES ('Pedro Henrique Rocha', TO_DATE('1990-01-01','YYYY-MM-DD') + 240, SYSDATE - 16, 'https://i.pravatar.cc/150?img=9', (SELECT id FROM Usuarios WHERE CPF = '90000000008'), (SELECT id FROM Enderecos WHERE cep = '14800-008'), (SELECT id FROM Telefones WHERE numero = 990000008));
+INSERT INTO Contas (numero_conta, saldo, data_abertura, id_status_conta, id_cliente) VALUES ('20008-9', 0.00, SYSDATE - 16, 1, (SELECT c.id FROM Clientes c JOIN Usuarios u ON c.id_usuario = u.id WHERE u.CPF = '90000000008'));
+
+INSERT INTO Usuarios (CPF, senha, email, id_tipo_usuario) VALUES ('90000000009', 'senha123', 'cliente.pendente.9@ifbank.com', 1);
+INSERT INTO Enderecos (logradouro, numero, bairro, cidade, estado, cep) VALUES ('Rua Ficticia, 109', 109, 'Centro', 'Marilia', 'SP', '14800-009');
+INSERT INTO Telefones (cod_pais, cod_area, numero) VALUES (55, 16, 990000009);
+INSERT INTO Clientes (nome, data_nascimento, data_cadastro, foto_url, id_usuario, id_endereco, id_telefone) VALUES ('Rafaela Almeida Cruz', TO_DATE('1990-01-01','YYYY-MM-DD') + 270, SYSDATE - 18, 'https://i.pravatar.cc/150?img=10', (SELECT id FROM Usuarios WHERE CPF = '90000000009'), (SELECT id FROM Enderecos WHERE cep = '14800-009'), (SELECT id FROM Telefones WHERE numero = 990000009));
+INSERT INTO Contas (numero_conta, saldo, data_abertura, id_status_conta, id_cliente) VALUES ('20009-1', 0.00, SYSDATE - 18, 1, (SELECT c.id FROM Clientes c JOIN Usuarios u ON c.id_usuario = u.id WHERE u.CPF = '90000000009'));
+
+INSERT INTO Usuarios (CPF, senha, email, id_tipo_usuario) VALUES ('90000000010', 'senha123', 'cliente.pendente.10@ifbank.com', 1);
+INSERT INTO Enderecos (logradouro, numero, bairro, cidade, estado, cep) VALUES ('Rua Ficticia, 110', 110, 'Centro', 'Presidente Prudente', 'SP', '14800-010');
+INSERT INTO Telefones (cod_pais, cod_area, numero) VALUES (55, 16, 990000010);
+INSERT INTO Clientes (nome, data_nascimento, data_cadastro, foto_url, id_usuario, id_endereco, id_telefone) VALUES ('Thiago Martins Barbosa', TO_DATE('1990-01-01','YYYY-MM-DD') + 300, SYSDATE - 20, 'https://i.pravatar.cc/150?img=11', (SELECT id FROM Usuarios WHERE CPF = '90000000010'), (SELECT id FROM Enderecos WHERE cep = '14800-010'), (SELECT id FROM Telefones WHERE numero = 990000010));
+INSERT INTO Contas (numero_conta, saldo, data_abertura, id_status_conta, id_cliente) VALUES ('20010-2', 0.00, SYSDATE - 20, 1, (SELECT c.id FROM Clientes c JOIN Usuarios u ON c.id_usuario = u.id WHERE u.CPF = '90000000010'));
+
+INSERT INTO Usuarios (CPF, senha, email, id_tipo_usuario) VALUES ('90000000011', 'senha123', 'cliente.pendente.11@ifbank.com', 1);
+INSERT INTO Enderecos (logradouro, numero, bairro, cidade, estado, cep) VALUES ('Rua Ficticia, 111', 111, 'Centro', 'Aracatuba', 'SP', '14800-011');
+INSERT INTO Telefones (cod_pais, cod_area, numero) VALUES (55, 16, 990000011);
+INSERT INTO Clientes (nome, data_nascimento, data_cadastro, foto_url, id_usuario, id_endereco, id_telefone) VALUES ('Vitoria Regina Nunes', TO_DATE('1990-01-01','YYYY-MM-DD') + 330, SYSDATE - 22, 'https://i.pravatar.cc/150?img=12', (SELECT id FROM Usuarios WHERE CPF = '90000000011'), (SELECT id FROM Enderecos WHERE cep = '14800-011'), (SELECT id FROM Telefones WHERE numero = 990000011));
+INSERT INTO Contas (numero_conta, saldo, data_abertura, id_status_conta, id_cliente) VALUES ('20011-3', 0.00, SYSDATE - 22, 1, (SELECT c.id FROM Clientes c JOIN Usuarios u ON c.id_usuario = u.id WHERE u.CPF = '90000000011'));
+
+INSERT INTO Usuarios (CPF, senha, email, id_tipo_usuario) VALUES ('90000000012', 'senha123', 'cliente.pendente.12@ifbank.com', 1);
+INSERT INTO Enderecos (logradouro, numero, bairro, cidade, estado, cep) VALUES ('Rua Ficticia, 112', 112, 'Centro', 'Franca', 'SP', '14800-012');
+INSERT INTO Telefones (cod_pais, cod_area, numero) VALUES (55, 16, 990000012);
+INSERT INTO Clientes (nome, data_nascimento, data_cadastro, foto_url, id_usuario, id_endereco, id_telefone) VALUES ('Bruno Cesar Teixeira', TO_DATE('1990-01-01','YYYY-MM-DD') + 360, SYSDATE - 24, 'https://i.pravatar.cc/150?img=13', (SELECT id FROM Usuarios WHERE CPF = '90000000012'), (SELECT id FROM Enderecos WHERE cep = '14800-012'), (SELECT id FROM Telefones WHERE numero = 990000012));
+INSERT INTO Contas (numero_conta, saldo, data_abertura, id_status_conta, id_cliente) VALUES ('20012-4', 0.00, SYSDATE - 24, 1, (SELECT c.id FROM Clientes c JOIN Usuarios u ON c.id_usuario = u.id WHERE u.CPF = '90000000012'));
+
+INSERT INTO Usuarios (CPF, senha, email, id_tipo_usuario) VALUES ('90000000013', 'senha123', 'cliente.pendente.13@ifbank.com', 1);
+INSERT INTO Enderecos (logradouro, numero, bairro, cidade, estado, cep) VALUES ('Rua Ficticia, 113', 113, 'Centro', 'Limeira', 'SP', '14800-013');
+INSERT INTO Telefones (cod_pais, cod_area, numero) VALUES (55, 16, 990000013);
+INSERT INTO Clientes (nome, data_nascimento, data_cadastro, foto_url, id_usuario, id_endereco, id_telefone) VALUES ('Camila Fontes Ribeiro', TO_DATE('1990-01-01','YYYY-MM-DD') + 390, SYSDATE - 26, 'https://i.pravatar.cc/150?img=14', (SELECT id FROM Usuarios WHERE CPF = '90000000013'), (SELECT id FROM Enderecos WHERE cep = '14800-013'), (SELECT id FROM Telefones WHERE numero = 990000013));
+INSERT INTO Contas (numero_conta, saldo, data_abertura, id_status_conta, id_cliente) VALUES ('20013-5', 0.00, SYSDATE - 26, 1, (SELECT c.id FROM Clientes c JOIN Usuarios u ON c.id_usuario = u.id WHERE u.CPF = '90000000013'));
+
+-- ============ STATUS: ATIVA (id_status_conta = 2) ============
+INSERT INTO Usuarios (CPF, senha, email, id_tipo_usuario) VALUES ('90000000014', 'senha123', 'cliente.ativa.1@ifbank.com', 1);
+INSERT INTO Enderecos (logradouro, numero, bairro, cidade, estado, cep) VALUES ('Rua Ficticia, 114', 114, 'Centro', 'Araraquara', 'SP', '14800-014');
+INSERT INTO Telefones (cod_pais, cod_area, numero) VALUES (55, 16, 990000014);
+INSERT INTO Clientes (nome, data_nascimento, data_cadastro, foto_url, id_usuario, id_endereco, id_telefone) VALUES ('Ana Beatriz Souza', TO_DATE('1990-01-01','YYYY-MM-DD') + 420, SYSDATE - 28, 'https://i.pravatar.cc/150?img=15', (SELECT id FROM Usuarios WHERE CPF = '90000000014'), (SELECT id FROM Enderecos WHERE cep = '14800-014'), (SELECT id FROM Telefones WHERE numero = 990000014));
+INSERT INTO Contas (numero_conta, saldo, data_abertura, id_status_conta, id_cliente) VALUES ('20014-6', 1640.00, SYSDATE - 28, 2, (SELECT c.id FROM Clientes c JOIN Usuarios u ON c.id_usuario = u.id WHERE u.CPF = '90000000014'));
+
+INSERT INTO Usuarios (CPF, senha, email, id_tipo_usuario) VALUES ('90000000015', 'senha123', 'cliente.ativa.2@ifbank.com', 1);
+INSERT INTO Enderecos (logradouro, numero, bairro, cidade, estado, cep) VALUES ('Rua Ficticia, 115', 115, 'Centro', 'Sao Carlos', 'SP', '14800-015');
+INSERT INTO Telefones (cod_pais, cod_area, numero) VALUES (55, 16, 990000015);
+INSERT INTO Clientes (nome, data_nascimento, data_cadastro, foto_url, id_usuario, id_endereco, id_telefone) VALUES ('Carlos Eduardo Lima', TO_DATE('1990-01-01','YYYY-MM-DD') + 450, SYSDATE - 30, 'https://i.pravatar.cc/150?img=16', (SELECT id FROM Usuarios WHERE CPF = '90000000015'), (SELECT id FROM Enderecos WHERE cep = '14800-015'), (SELECT id FROM Telefones WHERE numero = 990000015));
+INSERT INTO Contas (numero_conta, saldo, data_abertura, id_status_conta, id_cliente) VALUES ('20015-7', 1650.00, SYSDATE - 30, 2, (SELECT c.id FROM Clientes c JOIN Usuarios u ON c.id_usuario = u.id WHERE u.CPF = '90000000015'));
+
+INSERT INTO Usuarios (CPF, senha, email, id_tipo_usuario) VALUES ('90000000016', 'senha123', 'cliente.ativa.3@ifbank.com', 1);
+INSERT INTO Enderecos (logradouro, numero, bairro, cidade, estado, cep) VALUES ('Rua Ficticia, 116', 116, 'Centro', 'Ribeirao Preto', 'SP', '14800-016');
+INSERT INTO Telefones (cod_pais, cod_area, numero) VALUES (55, 16, 990000016);
+INSERT INTO Clientes (nome, data_nascimento, data_cadastro, foto_url, id_usuario, id_endereco, id_telefone) VALUES ('Fernanda Oliveira', TO_DATE('1990-01-01','YYYY-MM-DD') + 480, SYSDATE - 32, 'https://i.pravatar.cc/150?img=17', (SELECT id FROM Usuarios WHERE CPF = '90000000016'), (SELECT id FROM Enderecos WHERE cep = '14800-016'), (SELECT id FROM Telefones WHERE numero = 990000016));
+INSERT INTO Contas (numero_conta, saldo, data_abertura, id_status_conta, id_cliente) VALUES ('20016-8', 1660.00, SYSDATE - 32, 2, (SELECT c.id FROM Clientes c JOIN Usuarios u ON c.id_usuario = u.id WHERE u.CPF = '90000000016'));
+
+INSERT INTO Usuarios (CPF, senha, email, id_tipo_usuario) VALUES ('90000000017', 'senha123', 'cliente.ativa.4@ifbank.com', 1);
+INSERT INTO Enderecos (logradouro, numero, bairro, cidade, estado, cep) VALUES ('Rua Ficticia, 117', 117, 'Centro', 'Bauru', 'SP', '14800-017');
+INSERT INTO Telefones (cod_pais, cod_area, numero) VALUES (55, 16, 990000017);
+INSERT INTO Clientes (nome, data_nascimento, data_cadastro, foto_url, id_usuario, id_endereco, id_telefone) VALUES ('Gustavo Henrique Alves', TO_DATE('1990-01-01','YYYY-MM-DD') + 510, SYSDATE - 34, 'https://i.pravatar.cc/150?img=18', (SELECT id FROM Usuarios WHERE CPF = '90000000017'), (SELECT id FROM Enderecos WHERE cep = '14800-017'), (SELECT id FROM Telefones WHERE numero = 990000017));
+INSERT INTO Contas (numero_conta, saldo, data_abertura, id_status_conta, id_cliente) VALUES ('20017-9', 1670.00, SYSDATE - 34, 2, (SELECT c.id FROM Clientes c JOIN Usuarios u ON c.id_usuario = u.id WHERE u.CPF = '90000000017'));
+
+INSERT INTO Usuarios (CPF, senha, email, id_tipo_usuario) VALUES ('90000000018', 'senha123', 'cliente.ativa.5@ifbank.com', 1);
+INSERT INTO Enderecos (logradouro, numero, bairro, cidade, estado, cep) VALUES ('Rua Ficticia, 118', 118, 'Centro', 'Sorocaba', 'SP', '14800-018');
+INSERT INTO Telefones (cod_pais, cod_area, numero) VALUES (55, 16, 990000018);
+INSERT INTO Clientes (nome, data_nascimento, data_cadastro, foto_url, id_usuario, id_endereco, id_telefone) VALUES ('Juliana Pereira Santos', TO_DATE('1990-01-01','YYYY-MM-DD') + 540, SYSDATE - 36, 'https://i.pravatar.cc/150?img=19', (SELECT id FROM Usuarios WHERE CPF = '90000000018'), (SELECT id FROM Enderecos WHERE cep = '14800-018'), (SELECT id FROM Telefones WHERE numero = 990000018));
+INSERT INTO Contas (numero_conta, saldo, data_abertura, id_status_conta, id_cliente) VALUES ('20018-1', 1680.00, SYSDATE - 36, 2, (SELECT c.id FROM Clientes c JOIN Usuarios u ON c.id_usuario = u.id WHERE u.CPF = '90000000018'));
+
+INSERT INTO Usuarios (CPF, senha, email, id_tipo_usuario) VALUES ('90000000019', 'senha123', 'cliente.ativa.6@ifbank.com', 1);
+INSERT INTO Enderecos (logradouro, numero, bairro, cidade, estado, cep) VALUES ('Rua Ficticia, 119', 119, 'Centro', 'Campinas', 'SP', '14800-019');
+INSERT INTO Telefones (cod_pais, cod_area, numero) VALUES (55, 16, 990000019);
+INSERT INTO Clientes (nome, data_nascimento, data_cadastro, foto_url, id_usuario, id_endereco, id_telefone) VALUES ('Lucas Gabriel Costa', TO_DATE('1990-01-01','YYYY-MM-DD') + 570, SYSDATE - 38, 'https://i.pravatar.cc/150?img=20', (SELECT id FROM Usuarios WHERE CPF = '90000000019'), (SELECT id FROM Enderecos WHERE cep = '14800-019'), (SELECT id FROM Telefones WHERE numero = 990000019));
+INSERT INTO Contas (numero_conta, saldo, data_abertura, id_status_conta, id_cliente) VALUES ('20019-2', 1690.00, SYSDATE - 38, 2, (SELECT c.id FROM Clientes c JOIN Usuarios u ON c.id_usuario = u.id WHERE u.CPF = '90000000019'));
+
+INSERT INTO Usuarios (CPF, senha, email, id_tipo_usuario) VALUES ('90000000020', 'senha123', 'cliente.ativa.7@ifbank.com', 1);
+INSERT INTO Enderecos (logradouro, numero, bairro, cidade, estado, cep) VALUES ('Rua Ficticia, 120', 120, 'Centro', 'Jundiai', 'SP', '14800-020');
+INSERT INTO Telefones (cod_pais, cod_area, numero) VALUES (55, 16, 990000020);
+INSERT INTO Clientes (nome, data_nascimento, data_cadastro, foto_url, id_usuario, id_endereco, id_telefone) VALUES ('Mariana Ferreira Dias', TO_DATE('1990-01-01','YYYY-MM-DD') + 600, SYSDATE - 40, 'https://i.pravatar.cc/150?img=21', (SELECT id FROM Usuarios WHERE CPF = '90000000020'), (SELECT id FROM Enderecos WHERE cep = '14800-020'), (SELECT id FROM Telefones WHERE numero = 990000020));
+INSERT INTO Contas (numero_conta, saldo, data_abertura, id_status_conta, id_cliente) VALUES ('20020-3', 1700.00, SYSDATE - 40, 2, (SELECT c.id FROM Clientes c JOIN Usuarios u ON c.id_usuario = u.id WHERE u.CPF = '90000000020'));
+
+INSERT INTO Usuarios (CPF, senha, email, id_tipo_usuario) VALUES ('90000000021', 'senha123', 'cliente.ativa.8@ifbank.com', 1);
+INSERT INTO Enderecos (logradouro, numero, bairro, cidade, estado, cep) VALUES ('Rua Ficticia, 121', 121, 'Centro', 'Piracicaba', 'SP', '14800-021');
+INSERT INTO Telefones (cod_pais, cod_area, numero) VALUES (55, 16, 990000021);
+INSERT INTO Clientes (nome, data_nascimento, data_cadastro, foto_url, id_usuario, id_endereco, id_telefone) VALUES ('Pedro Henrique Rocha', TO_DATE('1990-01-01','YYYY-MM-DD') + 630, SYSDATE - 42, 'https://i.pravatar.cc/150?img=22', (SELECT id FROM Usuarios WHERE CPF = '90000000021'), (SELECT id FROM Enderecos WHERE cep = '14800-021'), (SELECT id FROM Telefones WHERE numero = 990000021));
+INSERT INTO Contas (numero_conta, saldo, data_abertura, id_status_conta, id_cliente) VALUES ('20021-4', 1710.00, SYSDATE - 42, 2, (SELECT c.id FROM Clientes c JOIN Usuarios u ON c.id_usuario = u.id WHERE u.CPF = '90000000021'));
+
+INSERT INTO Usuarios (CPF, senha, email, id_tipo_usuario) VALUES ('90000000022', 'senha123', 'cliente.ativa.9@ifbank.com', 1);
+INSERT INTO Enderecos (logradouro, numero, bairro, cidade, estado, cep) VALUES ('Rua Ficticia, 122', 122, 'Centro', 'Marilia', 'SP', '14800-022');
+INSERT INTO Telefones (cod_pais, cod_area, numero) VALUES (55, 16, 990000022);
+INSERT INTO Clientes (nome, data_nascimento, data_cadastro, foto_url, id_usuario, id_endereco, id_telefone) VALUES ('Rafaela Almeida Cruz', TO_DATE('1990-01-01','YYYY-MM-DD') + 660, SYSDATE - 44, 'https://i.pravatar.cc/150?img=23', (SELECT id FROM Usuarios WHERE CPF = '90000000022'), (SELECT id FROM Enderecos WHERE cep = '14800-022'), (SELECT id FROM Telefones WHERE numero = 990000022));
+INSERT INTO Contas (numero_conta, saldo, data_abertura, id_status_conta, id_cliente) VALUES ('20022-5', 1720.00, SYSDATE - 44, 2, (SELECT c.id FROM Clientes c JOIN Usuarios u ON c.id_usuario = u.id WHERE u.CPF = '90000000022'));
+
+INSERT INTO Usuarios (CPF, senha, email, id_tipo_usuario) VALUES ('90000000023', 'senha123', 'cliente.ativa.10@ifbank.com', 1);
+INSERT INTO Enderecos (logradouro, numero, bairro, cidade, estado, cep) VALUES ('Rua Ficticia, 123', 123, 'Centro', 'Presidente Prudente', 'SP', '14800-023');
+INSERT INTO Telefones (cod_pais, cod_area, numero) VALUES (55, 16, 990000023);
+INSERT INTO Clientes (nome, data_nascimento, data_cadastro, foto_url, id_usuario, id_endereco, id_telefone) VALUES ('Thiago Martins Barbosa', TO_DATE('1990-01-01','YYYY-MM-DD') + 690, SYSDATE - 46, 'https://i.pravatar.cc/150?img=24', (SELECT id FROM Usuarios WHERE CPF = '90000000023'), (SELECT id FROM Enderecos WHERE cep = '14800-023'), (SELECT id FROM Telefones WHERE numero = 990000023));
+INSERT INTO Contas (numero_conta, saldo, data_abertura, id_status_conta, id_cliente) VALUES ('20023-6', 1730.00, SYSDATE - 46, 2, (SELECT c.id FROM Clientes c JOIN Usuarios u ON c.id_usuario = u.id WHERE u.CPF = '90000000023'));
+
+INSERT INTO Usuarios (CPF, senha, email, id_tipo_usuario) VALUES ('90000000024', 'senha123', 'cliente.ativa.11@ifbank.com', 1);
+INSERT INTO Enderecos (logradouro, numero, bairro, cidade, estado, cep) VALUES ('Rua Ficticia, 124', 124, 'Centro', 'Aracatuba', 'SP', '14800-024');
+INSERT INTO Telefones (cod_pais, cod_area, numero) VALUES (55, 16, 990000024);
+INSERT INTO Clientes (nome, data_nascimento, data_cadastro, foto_url, id_usuario, id_endereco, id_telefone) VALUES ('Vitoria Regina Nunes', TO_DATE('1990-01-01','YYYY-MM-DD') + 720, SYSDATE - 48, 'https://i.pravatar.cc/150?img=25', (SELECT id FROM Usuarios WHERE CPF = '90000000024'), (SELECT id FROM Enderecos WHERE cep = '14800-024'), (SELECT id FROM Telefones WHERE numero = 990000024));
+INSERT INTO Contas (numero_conta, saldo, data_abertura, id_status_conta, id_cliente) VALUES ('20024-7', 1740.00, SYSDATE - 48, 2, (SELECT c.id FROM Clientes c JOIN Usuarios u ON c.id_usuario = u.id WHERE u.CPF = '90000000024'));
+
+INSERT INTO Usuarios (CPF, senha, email, id_tipo_usuario) VALUES ('90000000025', 'senha123', 'cliente.ativa.12@ifbank.com', 1);
+INSERT INTO Enderecos (logradouro, numero, bairro, cidade, estado, cep) VALUES ('Rua Ficticia, 125', 125, 'Centro', 'Franca', 'SP', '14800-025');
+INSERT INTO Telefones (cod_pais, cod_area, numero) VALUES (55, 16, 990000025);
+INSERT INTO Clientes (nome, data_nascimento, data_cadastro, foto_url, id_usuario, id_endereco, id_telefone) VALUES ('Bruno Cesar Teixeira', TO_DATE('1990-01-01','YYYY-MM-DD') + 750, SYSDATE - 50, 'https://i.pravatar.cc/150?img=26', (SELECT id FROM Usuarios WHERE CPF = '90000000025'), (SELECT id FROM Enderecos WHERE cep = '14800-025'), (SELECT id FROM Telefones WHERE numero = 990000025));
+INSERT INTO Contas (numero_conta, saldo, data_abertura, id_status_conta, id_cliente) VALUES ('20025-8', 1750.00, SYSDATE - 50, 2, (SELECT c.id FROM Clientes c JOIN Usuarios u ON c.id_usuario = u.id WHERE u.CPF = '90000000025'));
+
+INSERT INTO Usuarios (CPF, senha, email, id_tipo_usuario) VALUES ('90000000026', 'senha123', 'cliente.ativa.13@ifbank.com', 1);
+INSERT INTO Enderecos (logradouro, numero, bairro, cidade, estado, cep) VALUES ('Rua Ficticia, 126', 126, 'Centro', 'Limeira', 'SP', '14800-026');
+INSERT INTO Telefones (cod_pais, cod_area, numero) VALUES (55, 16, 990000026);
+INSERT INTO Clientes (nome, data_nascimento, data_cadastro, foto_url, id_usuario, id_endereco, id_telefone) VALUES ('Camila Fontes Ribeiro', TO_DATE('1990-01-01','YYYY-MM-DD') + 780, SYSDATE - 52, 'https://i.pravatar.cc/150?img=27', (SELECT id FROM Usuarios WHERE CPF = '90000000026'), (SELECT id FROM Enderecos WHERE cep = '14800-026'), (SELECT id FROM Telefones WHERE numero = 990000026));
+INSERT INTO Contas (numero_conta, saldo, data_abertura, id_status_conta, id_cliente) VALUES ('20026-9', 1760.00, SYSDATE - 52, 2, (SELECT c.id FROM Clientes c JOIN Usuarios u ON c.id_usuario = u.id WHERE u.CPF = '90000000026'));
+
+-- ============ STATUS: INATIVA (id_status_conta = 3) ============
+INSERT INTO Usuarios (CPF, senha, email, id_tipo_usuario) VALUES ('90000000027', 'senha123', 'cliente.inativa.1@ifbank.com', 1);
+INSERT INTO Enderecos (logradouro, numero, bairro, cidade, estado, cep) VALUES ('Rua Ficticia, 127', 127, 'Centro', 'Araraquara', 'SP', '14800-027');
+INSERT INTO Telefones (cod_pais, cod_area, numero) VALUES (55, 16, 990000027);
+INSERT INTO Clientes (nome, data_nascimento, data_cadastro, foto_url, id_usuario, id_endereco, id_telefone) VALUES ('Ana Beatriz Souza', TO_DATE('1990-01-01','YYYY-MM-DD') + 810, SYSDATE - 54, 'https://i.pravatar.cc/150?img=28', (SELECT id FROM Usuarios WHERE CPF = '90000000027'), (SELECT id FROM Enderecos WHERE cep = '14800-027'), (SELECT id FROM Telefones WHERE numero = 990000027));
+INSERT INTO Contas (numero_conta, saldo, data_abertura, id_status_conta, id_cliente) VALUES ('20027-1', 0.00, SYSDATE - 54, 3, (SELECT c.id FROM Clientes c JOIN Usuarios u ON c.id_usuario = u.id WHERE u.CPF = '90000000027'));
+
+INSERT INTO Usuarios (CPF, senha, email, id_tipo_usuario) VALUES ('90000000028', 'senha123', 'cliente.inativa.2@ifbank.com', 1);
+INSERT INTO Enderecos (logradouro, numero, bairro, cidade, estado, cep) VALUES ('Rua Ficticia, 128', 128, 'Centro', 'Sao Carlos', 'SP', '14800-028');
+INSERT INTO Telefones (cod_pais, cod_area, numero) VALUES (55, 16, 990000028);
+INSERT INTO Clientes (nome, data_nascimento, data_cadastro, foto_url, id_usuario, id_endereco, id_telefone) VALUES ('Carlos Eduardo Lima', TO_DATE('1990-01-01','YYYY-MM-DD') + 840, SYSDATE - 56, 'https://i.pravatar.cc/150?img=29', (SELECT id FROM Usuarios WHERE CPF = '90000000028'), (SELECT id FROM Enderecos WHERE cep = '14800-028'), (SELECT id FROM Telefones WHERE numero = 990000028));
+INSERT INTO Contas (numero_conta, saldo, data_abertura, id_status_conta, id_cliente) VALUES ('20028-2', 0.00, SYSDATE - 56, 3, (SELECT c.id FROM Clientes c JOIN Usuarios u ON c.id_usuario = u.id WHERE u.CPF = '90000000028'));
+
+INSERT INTO Usuarios (CPF, senha, email, id_tipo_usuario) VALUES ('90000000029', 'senha123', 'cliente.inativa.3@ifbank.com', 1);
+INSERT INTO Enderecos (logradouro, numero, bairro, cidade, estado, cep) VALUES ('Rua Ficticia, 129', 129, 'Centro', 'Ribeirao Preto', 'SP', '14800-029');
+INSERT INTO Telefones (cod_pais, cod_area, numero) VALUES (55, 16, 990000029);
+INSERT INTO Clientes (nome, data_nascimento, data_cadastro, foto_url, id_usuario, id_endereco, id_telefone) VALUES ('Fernanda Oliveira', TO_DATE('1990-01-01','YYYY-MM-DD') + 870, SYSDATE - 58, 'https://i.pravatar.cc/150?img=30', (SELECT id FROM Usuarios WHERE CPF = '90000000029'), (SELECT id FROM Enderecos WHERE cep = '14800-029'), (SELECT id FROM Telefones WHERE numero = 990000029));
+INSERT INTO Contas (numero_conta, saldo, data_abertura, id_status_conta, id_cliente) VALUES ('20029-3', 0.00, SYSDATE - 58, 3, (SELECT c.id FROM Clientes c JOIN Usuarios u ON c.id_usuario = u.id WHERE u.CPF = '90000000029'));
+
+INSERT INTO Usuarios (CPF, senha, email, id_tipo_usuario) VALUES ('90000000030', 'senha123', 'cliente.inativa.4@ifbank.com', 1);
+INSERT INTO Enderecos (logradouro, numero, bairro, cidade, estado, cep) VALUES ('Rua Ficticia, 130', 130, 'Centro', 'Bauru', 'SP', '14800-030');
+INSERT INTO Telefones (cod_pais, cod_area, numero) VALUES (55, 16, 990000030);
+INSERT INTO Clientes (nome, data_nascimento, data_cadastro, foto_url, id_usuario, id_endereco, id_telefone) VALUES ('Gustavo Henrique Alves', TO_DATE('1990-01-01','YYYY-MM-DD') + 900, SYSDATE - 60, 'https://i.pravatar.cc/150?img=31', (SELECT id FROM Usuarios WHERE CPF = '90000000030'), (SELECT id FROM Enderecos WHERE cep = '14800-030'), (SELECT id FROM Telefones WHERE numero = 990000030));
+INSERT INTO Contas (numero_conta, saldo, data_abertura, id_status_conta, id_cliente) VALUES ('20030-4', 0.00, SYSDATE - 60, 3, (SELECT c.id FROM Clientes c JOIN Usuarios u ON c.id_usuario = u.id WHERE u.CPF = '90000000030'));
+
+INSERT INTO Usuarios (CPF, senha, email, id_tipo_usuario) VALUES ('90000000031', 'senha123', 'cliente.inativa.5@ifbank.com', 1);
+INSERT INTO Enderecos (logradouro, numero, bairro, cidade, estado, cep) VALUES ('Rua Ficticia, 131', 131, 'Centro', 'Sorocaba', 'SP', '14800-031');
+INSERT INTO Telefones (cod_pais, cod_area, numero) VALUES (55, 16, 990000031);
+INSERT INTO Clientes (nome, data_nascimento, data_cadastro, foto_url, id_usuario, id_endereco, id_telefone) VALUES ('Juliana Pereira Santos', TO_DATE('1990-01-01','YYYY-MM-DD') + 930, SYSDATE - 62, 'https://i.pravatar.cc/150?img=32', (SELECT id FROM Usuarios WHERE CPF = '90000000031'), (SELECT id FROM Enderecos WHERE cep = '14800-031'), (SELECT id FROM Telefones WHERE numero = 990000031));
+INSERT INTO Contas (numero_conta, saldo, data_abertura, id_status_conta, id_cliente) VALUES ('20031-5', 0.00, SYSDATE - 62, 3, (SELECT c.id FROM Clientes c JOIN Usuarios u ON c.id_usuario = u.id WHERE u.CPF = '90000000031'));
+
+INSERT INTO Usuarios (CPF, senha, email, id_tipo_usuario) VALUES ('90000000032', 'senha123', 'cliente.inativa.6@ifbank.com', 1);
+INSERT INTO Enderecos (logradouro, numero, bairro, cidade, estado, cep) VALUES ('Rua Ficticia, 132', 132, 'Centro', 'Campinas', 'SP', '14800-032');
+INSERT INTO Telefones (cod_pais, cod_area, numero) VALUES (55, 16, 990000032);
+INSERT INTO Clientes (nome, data_nascimento, data_cadastro, foto_url, id_usuario, id_endereco, id_telefone) VALUES ('Lucas Gabriel Costa', TO_DATE('1990-01-01','YYYY-MM-DD') + 960, SYSDATE - 64, 'https://i.pravatar.cc/150?img=33', (SELECT id FROM Usuarios WHERE CPF = '90000000032'), (SELECT id FROM Enderecos WHERE cep = '14800-032'), (SELECT id FROM Telefones WHERE numero = 990000032));
+INSERT INTO Contas (numero_conta, saldo, data_abertura, id_status_conta, id_cliente) VALUES ('20032-6', 0.00, SYSDATE - 64, 3, (SELECT c.id FROM Clientes c JOIN Usuarios u ON c.id_usuario = u.id WHERE u.CPF = '90000000032'));
+
+INSERT INTO Usuarios (CPF, senha, email, id_tipo_usuario) VALUES ('90000000033', 'senha123', 'cliente.inativa.7@ifbank.com', 1);
+INSERT INTO Enderecos (logradouro, numero, bairro, cidade, estado, cep) VALUES ('Rua Ficticia, 133', 133, 'Centro', 'Jundiai', 'SP', '14800-033');
+INSERT INTO Telefones (cod_pais, cod_area, numero) VALUES (55, 16, 990000033);
+INSERT INTO Clientes (nome, data_nascimento, data_cadastro, foto_url, id_usuario, id_endereco, id_telefone) VALUES ('Mariana Ferreira Dias', TO_DATE('1990-01-01','YYYY-MM-DD') + 990, SYSDATE - 66, 'https://i.pravatar.cc/150?img=34', (SELECT id FROM Usuarios WHERE CPF = '90000000033'), (SELECT id FROM Enderecos WHERE cep = '14800-033'), (SELECT id FROM Telefones WHERE numero = 990000033));
+INSERT INTO Contas (numero_conta, saldo, data_abertura, id_status_conta, id_cliente) VALUES ('20033-7', 0.00, SYSDATE - 66, 3, (SELECT c.id FROM Clientes c JOIN Usuarios u ON c.id_usuario = u.id WHERE u.CPF = '90000000033'));
+
+INSERT INTO Usuarios (CPF, senha, email, id_tipo_usuario) VALUES ('90000000034', 'senha123', 'cliente.inativa.8@ifbank.com', 1);
+INSERT INTO Enderecos (logradouro, numero, bairro, cidade, estado, cep) VALUES ('Rua Ficticia, 134', 134, 'Centro', 'Piracicaba', 'SP', '14800-034');
+INSERT INTO Telefones (cod_pais, cod_area, numero) VALUES (55, 16, 990000034);
+INSERT INTO Clientes (nome, data_nascimento, data_cadastro, foto_url, id_usuario, id_endereco, id_telefone) VALUES ('Pedro Henrique Rocha', TO_DATE('1990-01-01','YYYY-MM-DD') + 1020, SYSDATE - 68, 'https://i.pravatar.cc/150?img=35', (SELECT id FROM Usuarios WHERE CPF = '90000000034'), (SELECT id FROM Enderecos WHERE cep = '14800-034'), (SELECT id FROM Telefones WHERE numero = 990000034));
+INSERT INTO Contas (numero_conta, saldo, data_abertura, id_status_conta, id_cliente) VALUES ('20034-8', 0.00, SYSDATE - 68, 3, (SELECT c.id FROM Clientes c JOIN Usuarios u ON c.id_usuario = u.id WHERE u.CPF = '90000000034'));
+
+INSERT INTO Usuarios (CPF, senha, email, id_tipo_usuario) VALUES ('90000000035', 'senha123', 'cliente.inativa.9@ifbank.com', 1);
+INSERT INTO Enderecos (logradouro, numero, bairro, cidade, estado, cep) VALUES ('Rua Ficticia, 135', 135, 'Centro', 'Marilia', 'SP', '14800-035');
+INSERT INTO Telefones (cod_pais, cod_area, numero) VALUES (55, 16, 990000035);
+INSERT INTO Clientes (nome, data_nascimento, data_cadastro, foto_url, id_usuario, id_endereco, id_telefone) VALUES ('Rafaela Almeida Cruz', TO_DATE('1990-01-01','YYYY-MM-DD') + 1050, SYSDATE - 70, 'https://i.pravatar.cc/150?img=36', (SELECT id FROM Usuarios WHERE CPF = '90000000035'), (SELECT id FROM Enderecos WHERE cep = '14800-035'), (SELECT id FROM Telefones WHERE numero = 990000035));
+INSERT INTO Contas (numero_conta, saldo, data_abertura, id_status_conta, id_cliente) VALUES ('20035-9', 0.00, SYSDATE - 70, 3, (SELECT c.id FROM Clientes c JOIN Usuarios u ON c.id_usuario = u.id WHERE u.CPF = '90000000035'));
+
+INSERT INTO Usuarios (CPF, senha, email, id_tipo_usuario) VALUES ('90000000036', 'senha123', 'cliente.inativa.10@ifbank.com', 1);
+INSERT INTO Enderecos (logradouro, numero, bairro, cidade, estado, cep) VALUES ('Rua Ficticia, 136', 136, 'Centro', 'Presidente Prudente', 'SP', '14800-036');
+INSERT INTO Telefones (cod_pais, cod_area, numero) VALUES (55, 16, 990000036);
+INSERT INTO Clientes (nome, data_nascimento, data_cadastro, foto_url, id_usuario, id_endereco, id_telefone) VALUES ('Thiago Martins Barbosa', TO_DATE('1990-01-01','YYYY-MM-DD') + 1080, SYSDATE - 72, 'https://i.pravatar.cc/150?img=37', (SELECT id FROM Usuarios WHERE CPF = '90000000036'), (SELECT id FROM Enderecos WHERE cep = '14800-036'), (SELECT id FROM Telefones WHERE numero = 990000036));
+INSERT INTO Contas (numero_conta, saldo, data_abertura, id_status_conta, id_cliente) VALUES ('20036-1', 0.00, SYSDATE - 72, 3, (SELECT c.id FROM Clientes c JOIN Usuarios u ON c.id_usuario = u.id WHERE u.CPF = '90000000036'));
+
+INSERT INTO Usuarios (CPF, senha, email, id_tipo_usuario) VALUES ('90000000037', 'senha123', 'cliente.inativa.11@ifbank.com', 1);
+INSERT INTO Enderecos (logradouro, numero, bairro, cidade, estado, cep) VALUES ('Rua Ficticia, 137', 137, 'Centro', 'Aracatuba', 'SP', '14800-037');
+INSERT INTO Telefones (cod_pais, cod_area, numero) VALUES (55, 16, 990000037);
+INSERT INTO Clientes (nome, data_nascimento, data_cadastro, foto_url, id_usuario, id_endereco, id_telefone) VALUES ('Vitoria Regina Nunes', TO_DATE('1990-01-01','YYYY-MM-DD') + 1110, SYSDATE - 74, 'https://i.pravatar.cc/150?img=38', (SELECT id FROM Usuarios WHERE CPF = '90000000037'), (SELECT id FROM Enderecos WHERE cep = '14800-037'), (SELECT id FROM Telefones WHERE numero = 990000037));
+INSERT INTO Contas (numero_conta, saldo, data_abertura, id_status_conta, id_cliente) VALUES ('20037-2', 0.00, SYSDATE - 74, 3, (SELECT c.id FROM Clientes c JOIN Usuarios u ON c.id_usuario = u.id WHERE u.CPF = '90000000037'));
+
+INSERT INTO Usuarios (CPF, senha, email, id_tipo_usuario) VALUES ('90000000038', 'senha123', 'cliente.inativa.12@ifbank.com', 1);
+INSERT INTO Enderecos (logradouro, numero, bairro, cidade, estado, cep) VALUES ('Rua Ficticia, 138', 138, 'Centro', 'Franca', 'SP', '14800-038');
+INSERT INTO Telefones (cod_pais, cod_area, numero) VALUES (55, 16, 990000038);
+INSERT INTO Clientes (nome, data_nascimento, data_cadastro, foto_url, id_usuario, id_endereco, id_telefone) VALUES ('Bruno Cesar Teixeira', TO_DATE('1990-01-01','YYYY-MM-DD') + 1140, SYSDATE - 76, 'https://i.pravatar.cc/150?img=39', (SELECT id FROM Usuarios WHERE CPF = '90000000038'), (SELECT id FROM Enderecos WHERE cep = '14800-038'), (SELECT id FROM Telefones WHERE numero = 990000038));
+INSERT INTO Contas (numero_conta, saldo, data_abertura, id_status_conta, id_cliente) VALUES ('20038-3', 0.00, SYSDATE - 76, 3, (SELECT c.id FROM Clientes c JOIN Usuarios u ON c.id_usuario = u.id WHERE u.CPF = '90000000038'));
+
+INSERT INTO Usuarios (CPF, senha, email, id_tipo_usuario) VALUES ('90000000039', 'senha123', 'cliente.inativa.13@ifbank.com', 1);
+INSERT INTO Enderecos (logradouro, numero, bairro, cidade, estado, cep) VALUES ('Rua Ficticia, 139', 139, 'Centro', 'Limeira', 'SP', '14800-039');
+INSERT INTO Telefones (cod_pais, cod_area, numero) VALUES (55, 16, 990000039);
+INSERT INTO Clientes (nome, data_nascimento, data_cadastro, foto_url, id_usuario, id_endereco, id_telefone) VALUES ('Camila Fontes Ribeiro', TO_DATE('1990-01-01','YYYY-MM-DD') + 1170, SYSDATE - 78, 'https://i.pravatar.cc/150?img=40', (SELECT id FROM Usuarios WHERE CPF = '90000000039'), (SELECT id FROM Enderecos WHERE cep = '14800-039'), (SELECT id FROM Telefones WHERE numero = 990000039));
+INSERT INTO Contas (numero_conta, saldo, data_abertura, id_status_conta, id_cliente) VALUES ('20039-4', 0.00, SYSDATE - 78, 3, (SELECT c.id FROM Clientes c JOIN Usuarios u ON c.id_usuario = u.id WHERE u.CPF = '90000000039'));
+
+-- ============ STATUS: REJEITADA (id_status_conta = 4) ============
+INSERT INTO Usuarios (CPF, senha, email, id_tipo_usuario) VALUES ('90000000040', 'senha123', 'cliente.rejeitada.1@ifbank.com', 1);
+INSERT INTO Enderecos (logradouro, numero, bairro, cidade, estado, cep) VALUES ('Rua Ficticia, 140', 140, 'Centro', 'Araraquara', 'SP', '14800-040');
+INSERT INTO Telefones (cod_pais, cod_area, numero) VALUES (55, 16, 990000040);
+INSERT INTO Clientes (nome, data_nascimento, data_cadastro, foto_url, id_usuario, id_endereco, id_telefone) VALUES ('Ana Beatriz Souza', TO_DATE('1990-01-01','YYYY-MM-DD') + 1200, SYSDATE - 80, 'https://i.pravatar.cc/150?img=41', (SELECT id FROM Usuarios WHERE CPF = '90000000040'), (SELECT id FROM Enderecos WHERE cep = '14800-040'), (SELECT id FROM Telefones WHERE numero = 990000040));
+INSERT INTO Contas (numero_conta, saldo, data_abertura, id_status_conta, id_cliente) VALUES ('20040-5', 0.00, SYSDATE - 80, 4, (SELECT c.id FROM Clientes c JOIN Usuarios u ON c.id_usuario = u.id WHERE u.CPF = '90000000040'));
+
+INSERT INTO Usuarios (CPF, senha, email, id_tipo_usuario) VALUES ('90000000041', 'senha123', 'cliente.rejeitada.2@ifbank.com', 1);
+INSERT INTO Enderecos (logradouro, numero, bairro, cidade, estado, cep) VALUES ('Rua Ficticia, 141', 141, 'Centro', 'Sao Carlos', 'SP', '14800-041');
+INSERT INTO Telefones (cod_pais, cod_area, numero) VALUES (55, 16, 990000041);
+INSERT INTO Clientes (nome, data_nascimento, data_cadastro, foto_url, id_usuario, id_endereco, id_telefone) VALUES ('Carlos Eduardo Lima', TO_DATE('1990-01-01','YYYY-MM-DD') + 1230, SYSDATE - 82, 'https://i.pravatar.cc/150?img=42', (SELECT id FROM Usuarios WHERE CPF = '90000000041'), (SELECT id FROM Enderecos WHERE cep = '14800-041'), (SELECT id FROM Telefones WHERE numero = 990000041));
+INSERT INTO Contas (numero_conta, saldo, data_abertura, id_status_conta, id_cliente) VALUES ('20041-6', 0.00, SYSDATE - 82, 4, (SELECT c.id FROM Clientes c JOIN Usuarios u ON c.id_usuario = u.id WHERE u.CPF = '90000000041'));
+
+INSERT INTO Usuarios (CPF, senha, email, id_tipo_usuario) VALUES ('90000000042', 'senha123', 'cliente.rejeitada.3@ifbank.com', 1);
+INSERT INTO Enderecos (logradouro, numero, bairro, cidade, estado, cep) VALUES ('Rua Ficticia, 142', 142, 'Centro', 'Ribeirao Preto', 'SP', '14800-042');
+INSERT INTO Telefones (cod_pais, cod_area, numero) VALUES (55, 16, 990000042);
+INSERT INTO Clientes (nome, data_nascimento, data_cadastro, foto_url, id_usuario, id_endereco, id_telefone) VALUES ('Fernanda Oliveira', TO_DATE('1990-01-01','YYYY-MM-DD') + 1260, SYSDATE - 84, 'https://i.pravatar.cc/150?img=43', (SELECT id FROM Usuarios WHERE CPF = '90000000042'), (SELECT id FROM Enderecos WHERE cep = '14800-042'), (SELECT id FROM Telefones WHERE numero = 990000042));
+INSERT INTO Contas (numero_conta, saldo, data_abertura, id_status_conta, id_cliente) VALUES ('20042-7', 0.00, SYSDATE - 84, 4, (SELECT c.id FROM Clientes c JOIN Usuarios u ON c.id_usuario = u.id WHERE u.CPF = '90000000042'));
+
+INSERT INTO Usuarios (CPF, senha, email, id_tipo_usuario) VALUES ('90000000043', 'senha123', 'cliente.rejeitada.4@ifbank.com', 1);
+INSERT INTO Enderecos (logradouro, numero, bairro, cidade, estado, cep) VALUES ('Rua Ficticia, 143', 143, 'Centro', 'Bauru', 'SP', '14800-043');
+INSERT INTO Telefones (cod_pais, cod_area, numero) VALUES (55, 16, 990000043);
+INSERT INTO Clientes (nome, data_nascimento, data_cadastro, foto_url, id_usuario, id_endereco, id_telefone) VALUES ('Gustavo Henrique Alves', TO_DATE('1990-01-01','YYYY-MM-DD') + 1290, SYSDATE - 86, 'https://i.pravatar.cc/150?img=44', (SELECT id FROM Usuarios WHERE CPF = '90000000043'), (SELECT id FROM Enderecos WHERE cep = '14800-043'), (SELECT id FROM Telefones WHERE numero = 990000043));
+INSERT INTO Contas (numero_conta, saldo, data_abertura, id_status_conta, id_cliente) VALUES ('20043-8', 0.00, SYSDATE - 86, 4, (SELECT c.id FROM Clientes c JOIN Usuarios u ON c.id_usuario = u.id WHERE u.CPF = '90000000043'));
+
+INSERT INTO Usuarios (CPF, senha, email, id_tipo_usuario) VALUES ('90000000044', 'senha123', 'cliente.rejeitada.5@ifbank.com', 1);
+INSERT INTO Enderecos (logradouro, numero, bairro, cidade, estado, cep) VALUES ('Rua Ficticia, 144', 144, 'Centro', 'Sorocaba', 'SP', '14800-044');
+INSERT INTO Telefones (cod_pais, cod_area, numero) VALUES (55, 16, 990000044);
+INSERT INTO Clientes (nome, data_nascimento, data_cadastro, foto_url, id_usuario, id_endereco, id_telefone) VALUES ('Juliana Pereira Santos', TO_DATE('1990-01-01','YYYY-MM-DD') + 1320, SYSDATE - 88, 'https://i.pravatar.cc/150?img=45', (SELECT id FROM Usuarios WHERE CPF = '90000000044'), (SELECT id FROM Enderecos WHERE cep = '14800-044'), (SELECT id FROM Telefones WHERE numero = 990000044));
+INSERT INTO Contas (numero_conta, saldo, data_abertura, id_status_conta, id_cliente) VALUES ('20044-9', 0.00, SYSDATE - 88, 4, (SELECT c.id FROM Clientes c JOIN Usuarios u ON c.id_usuario = u.id WHERE u.CPF = '90000000044'));
+
+INSERT INTO Usuarios (CPF, senha, email, id_tipo_usuario) VALUES ('90000000045', 'senha123', 'cliente.rejeitada.6@ifbank.com', 1);
+INSERT INTO Enderecos (logradouro, numero, bairro, cidade, estado, cep) VALUES ('Rua Ficticia, 145', 145, 'Centro', 'Campinas', 'SP', '14800-045');
+INSERT INTO Telefones (cod_pais, cod_area, numero) VALUES (55, 16, 990000045);
+INSERT INTO Clientes (nome, data_nascimento, data_cadastro, foto_url, id_usuario, id_endereco, id_telefone) VALUES ('Lucas Gabriel Costa', TO_DATE('1990-01-01','YYYY-MM-DD') + 1350, SYSDATE - 90, 'https://i.pravatar.cc/150?img=46', (SELECT id FROM Usuarios WHERE CPF = '90000000045'), (SELECT id FROM Enderecos WHERE cep = '14800-045'), (SELECT id FROM Telefones WHERE numero = 990000045));
+INSERT INTO Contas (numero_conta, saldo, data_abertura, id_status_conta, id_cliente) VALUES ('20045-1', 0.00, SYSDATE - 90, 4, (SELECT c.id FROM Clientes c JOIN Usuarios u ON c.id_usuario = u.id WHERE u.CPF = '90000000045'));
+
+INSERT INTO Usuarios (CPF, senha, email, id_tipo_usuario) VALUES ('90000000046', 'senha123', 'cliente.rejeitada.7@ifbank.com', 1);
+INSERT INTO Enderecos (logradouro, numero, bairro, cidade, estado, cep) VALUES ('Rua Ficticia, 146', 146, 'Centro', 'Jundiai', 'SP', '14800-046');
+INSERT INTO Telefones (cod_pais, cod_area, numero) VALUES (55, 16, 990000046);
+INSERT INTO Clientes (nome, data_nascimento, data_cadastro, foto_url, id_usuario, id_endereco, id_telefone) VALUES ('Mariana Ferreira Dias', TO_DATE('1990-01-01','YYYY-MM-DD') + 1380, SYSDATE - 92, 'https://i.pravatar.cc/150?img=47', (SELECT id FROM Usuarios WHERE CPF = '90000000046'), (SELECT id FROM Enderecos WHERE cep = '14800-046'), (SELECT id FROM Telefones WHERE numero = 990000046));
+INSERT INTO Contas (numero_conta, saldo, data_abertura, id_status_conta, id_cliente) VALUES ('20046-2', 0.00, SYSDATE - 92, 4, (SELECT c.id FROM Clientes c JOIN Usuarios u ON c.id_usuario = u.id WHERE u.CPF = '90000000046'));
+
+INSERT INTO Usuarios (CPF, senha, email, id_tipo_usuario) VALUES ('90000000047', 'senha123', 'cliente.rejeitada.8@ifbank.com', 1);
+INSERT INTO Enderecos (logradouro, numero, bairro, cidade, estado, cep) VALUES ('Rua Ficticia, 147', 147, 'Centro', 'Piracicaba', 'SP', '14800-047');
+INSERT INTO Telefones (cod_pais, cod_area, numero) VALUES (55, 16, 990000047);
+INSERT INTO Clientes (nome, data_nascimento, data_cadastro, foto_url, id_usuario, id_endereco, id_telefone) VALUES ('Pedro Henrique Rocha', TO_DATE('1990-01-01','YYYY-MM-DD') + 1410, SYSDATE - 94, 'https://i.pravatar.cc/150?img=48', (SELECT id FROM Usuarios WHERE CPF = '90000000047'), (SELECT id FROM Enderecos WHERE cep = '14800-047'), (SELECT id FROM Telefones WHERE numero = 990000047));
+INSERT INTO Contas (numero_conta, saldo, data_abertura, id_status_conta, id_cliente) VALUES ('20047-3', 0.00, SYSDATE - 94, 4, (SELECT c.id FROM Clientes c JOIN Usuarios u ON c.id_usuario = u.id WHERE u.CPF = '90000000047'));
+
+INSERT INTO Usuarios (CPF, senha, email, id_tipo_usuario) VALUES ('90000000048', 'senha123', 'cliente.rejeitada.9@ifbank.com', 1);
+INSERT INTO Enderecos (logradouro, numero, bairro, cidade, estado, cep) VALUES ('Rua Ficticia, 148', 148, 'Centro', 'Marilia', 'SP', '14800-048');
+INSERT INTO Telefones (cod_pais, cod_area, numero) VALUES (55, 16, 990000048);
+INSERT INTO Clientes (nome, data_nascimento, data_cadastro, foto_url, id_usuario, id_endereco, id_telefone) VALUES ('Rafaela Almeida Cruz', TO_DATE('1990-01-01','YYYY-MM-DD') + 1440, SYSDATE - 96, 'https://i.pravatar.cc/150?img=49', (SELECT id FROM Usuarios WHERE CPF = '90000000048'), (SELECT id FROM Enderecos WHERE cep = '14800-048'), (SELECT id FROM Telefones WHERE numero = 990000048));
+INSERT INTO Contas (numero_conta, saldo, data_abertura, id_status_conta, id_cliente) VALUES ('20048-4', 0.00, SYSDATE - 96, 4, (SELECT c.id FROM Clientes c JOIN Usuarios u ON c.id_usuario = u.id WHERE u.CPF = '90000000048'));
+
+INSERT INTO Usuarios (CPF, senha, email, id_tipo_usuario) VALUES ('90000000049', 'senha123', 'cliente.rejeitada.10@ifbank.com', 1);
+INSERT INTO Enderecos (logradouro, numero, bairro, cidade, estado, cep) VALUES ('Rua Ficticia, 149', 149, 'Centro', 'Presidente Prudente', 'SP', '14800-049');
+INSERT INTO Telefones (cod_pais, cod_area, numero) VALUES (55, 16, 990000049);
+INSERT INTO Clientes (nome, data_nascimento, data_cadastro, foto_url, id_usuario, id_endereco, id_telefone) VALUES ('Thiago Martins Barbosa', TO_DATE('1990-01-01','YYYY-MM-DD') + 1470, SYSDATE - 98, 'https://i.pravatar.cc/150?img=50', (SELECT id FROM Usuarios WHERE CPF = '90000000049'), (SELECT id FROM Enderecos WHERE cep = '14800-049'), (SELECT id FROM Telefones WHERE numero = 990000049));
+INSERT INTO Contas (numero_conta, saldo, data_abertura, id_status_conta, id_cliente) VALUES ('20049-5', 0.00, SYSDATE - 98, 4, (SELECT c.id FROM Clientes c JOIN Usuarios u ON c.id_usuario = u.id WHERE u.CPF = '90000000049'));
+
+INSERT INTO Usuarios (CPF, senha, email, id_tipo_usuario) VALUES ('90000000050', 'senha123', 'cliente.rejeitada.11@ifbank.com', 1);
+INSERT INTO Enderecos (logradouro, numero, bairro, cidade, estado, cep) VALUES ('Rua Ficticia, 150', 150, 'Centro', 'Aracatuba', 'SP', '14800-050');
+INSERT INTO Telefones (cod_pais, cod_area, numero) VALUES (55, 16, 990000050);
+INSERT INTO Clientes (nome, data_nascimento, data_cadastro, foto_url, id_usuario, id_endereco, id_telefone) VALUES ('Vitoria Regina Nunes', TO_DATE('1990-01-01','YYYY-MM-DD') + 1500, SYSDATE - 100, 'https://i.pravatar.cc/150?img=51', (SELECT id FROM Usuarios WHERE CPF = '90000000050'), (SELECT id FROM Enderecos WHERE cep = '14800-050'), (SELECT id FROM Telefones WHERE numero = 990000050));
+INSERT INTO Contas (numero_conta, saldo, data_abertura, id_status_conta, id_cliente) VALUES ('20050-6', 0.00, SYSDATE - 100, 4, (SELECT c.id FROM Clientes c JOIN Usuarios u ON c.id_usuario = u.id WHERE u.CPF = '90000000050'));
+
+INSERT INTO Usuarios (CPF, senha, email, id_tipo_usuario) VALUES ('90000000051', 'senha123', 'cliente.rejeitada.12@ifbank.com', 1);
+INSERT INTO Enderecos (logradouro, numero, bairro, cidade, estado, cep) VALUES ('Rua Ficticia, 151', 151, 'Centro', 'Franca', 'SP', '14800-051');
+INSERT INTO Telefones (cod_pais, cod_area, numero) VALUES (55, 16, 990000051);
+INSERT INTO Clientes (nome, data_nascimento, data_cadastro, foto_url, id_usuario, id_endereco, id_telefone) VALUES ('Bruno Cesar Teixeira', TO_DATE('1990-01-01','YYYY-MM-DD') + 1530, SYSDATE - 102, 'https://i.pravatar.cc/150?img=52', (SELECT id FROM Usuarios WHERE CPF = '90000000051'), (SELECT id FROM Enderecos WHERE cep = '14800-051'), (SELECT id FROM Telefones WHERE numero = 990000051));
+INSERT INTO Contas (numero_conta, saldo, data_abertura, id_status_conta, id_cliente) VALUES ('20051-7', 0.00, SYSDATE - 102, 4, (SELECT c.id FROM Clientes c JOIN Usuarios u ON c.id_usuario = u.id WHERE u.CPF = '90000000051'));
+
+INSERT INTO Usuarios (CPF, senha, email, id_tipo_usuario) VALUES ('90000000052', 'senha123', 'cliente.rejeitada.13@ifbank.com', 1);
+INSERT INTO Enderecos (logradouro, numero, bairro, cidade, estado, cep) VALUES ('Rua Ficticia, 152', 152, 'Centro', 'Limeira', 'SP', '14800-052');
+INSERT INTO Telefones (cod_pais, cod_area, numero) VALUES (55, 16, 990000052);
+INSERT INTO Clientes (nome, data_nascimento, data_cadastro, foto_url, id_usuario, id_endereco, id_telefone) VALUES ('Camila Fontes Ribeiro', TO_DATE('1990-01-01','YYYY-MM-DD') + 1560, SYSDATE - 104, 'https://i.pravatar.cc/150?img=53', (SELECT id FROM Usuarios WHERE CPF = '90000000052'), (SELECT id FROM Enderecos WHERE cep = '14800-052'), (SELECT id FROM Telefones WHERE numero = 990000052));
+INSERT INTO Contas (numero_conta, saldo, data_abertura, id_status_conta, id_cliente) VALUES ('20052-8', 0.00, SYSDATE - 104, 4, (SELECT c.id FROM Clientes c JOIN Usuarios u ON c.id_usuario = u.id WHERE u.CPF = '90000000052'));
+
 COMMIT;
 
 
