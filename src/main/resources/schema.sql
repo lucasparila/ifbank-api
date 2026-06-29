@@ -278,7 +278,7 @@ INSERT INTO Telefones (cod_pais, cod_area, numero)
 VALUES (55, 16, 999999999);
 
 INSERT INTO Clientes (nome, data_nascimento, data_cadastro,foto_url,id_usuario, id_endereco, id_telefone)
-VALUES ('Usuário de Teste', TO_DATE('1990-01-01', 'YYYY-MM-DD'), SYSDATE,'caminho relativo',1, 1, 1);
+VALUES ('Usuário de Teste', TO_DATE('1990-01-01', 'YYYY-MM-DD'), SYSDATE,'/uploads/clientes/1/9ee7750b-6822-40e4-a0be-29d62c3622d9.jpeg',1, 1, 1);
 
 -- Criando a Conta Vinculada Ativa (Ganha ID 1)
 INSERT INTO Contas (numero_conta, saldo, data_abertura, id_status_conta, id_cliente)

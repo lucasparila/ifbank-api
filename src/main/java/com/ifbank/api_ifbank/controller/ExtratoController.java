@@ -1,7 +1,9 @@
 package com.ifbank.api_ifbank.controller;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -34,12 +36,18 @@ public class ExtratoController {
             @PathVariable Long idConta,
             @RequestParam(required = false) String nome,
             @RequestParam(required = false) BigDecimal valor,
+            @RequestParam(required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)LocalDate dataInicio,
+            
+            @RequestParam(required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)LocalDate dataFim,
+            
             @RequestParam(required = false) String ordenacao,
             @RequestParam(required = false) String direcao
     ) {
 
         ExtratoPdfResponseDTO dto = movimentacaoService
-                .montarExtratoPdf(idConta, nome, valor, ordenacao, direcao);
+                .montarExtratoPdf(idConta, nome, valor,dataInicio,dataFim, ordenacao, direcao);
 
         byte[] pdf = extratoPdfService.gerarPdfExtrato(dto);
 
