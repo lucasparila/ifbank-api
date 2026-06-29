@@ -28,6 +28,7 @@ public class ExtratoPdfService implements IExtratoPdfService {
 
         Document document = new Document();
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
         try {
 
@@ -55,15 +56,27 @@ public class ExtratoPdfService implements IExtratoPdfService {
             document.add(new Paragraph("Titular: " + dto.getNomeTitular(), TEXTO));
             document.add(new Paragraph("Conta: " + dto.getNumeroConta(), TEXTO));
 
-            document.add(new Paragraph(
-                    "Saldo atual: R$ " + formatarValor(dto.getSaldoAtual()),
-                    TEXTO_NEGRITO
-            ));
+            document.add(new Paragraph("Saldo atual: R$ " + formatarValor(dto.getSaldoAtual()),TEXTO_NEGRITO));
 
-            document.add(new Paragraph(
-                    "Emitido em: " + dto.getDataEmissao(),
-                    TEXTO
-            ));
+            document.add(new Paragraph("Emitido em: " + dto.getDataEmissao(),TEXTO));
+            
+            if (dto.getDataInicioFiltro() != null || dto.getDataFimFiltro() != null) {
+
+                String inicio = dto.getDataInicioFiltro() != null
+                        ? dto.getDataInicioFiltro().format(DATE_FORMATTER)
+                        : "...";
+
+                String fim = dto.getDataFimFiltro() != null
+                        ? dto.getDataFimFiltro().format(DATE_FORMATTER)
+                        : "...";
+
+                document.add(new Paragraph("Período: " + inicio + " a " + fim, TEXTO));
+
+            } else {
+
+                document.add(new Paragraph("Período: Todas as movimentações", TEXTO));
+
+            }
 
             document.add(new Paragraph(" "));
             document.add(new LineSeparator());
@@ -94,7 +107,7 @@ public class ExtratoPdfService implements IExtratoPdfService {
             table.addCell(new Paragraph("Valor", TEXTO_NEGRITO));
             table.addCell(new Paragraph("Saldo", TEXTO_NEGRITO));
 
-            DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+         
             for (MovimentacaoResponseDTO m : movs) {
             	
             	String dataFormatada = m.getDataMovimento().format(DATE_FORMATTER);

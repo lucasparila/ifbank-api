@@ -7,6 +7,7 @@ import com.ifbank.api_ifbank.model.DTO.movimentacao.TransferenciaRequestDTO;
 import org.springframework.data.domain.Page;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 
 public interface IMovimentacaoService {
@@ -14,6 +15,6 @@ public interface IMovimentacaoService {
     MovimentacaoResponseDTO sacar(MovimentacaoRequestDTO dto);
     MovimentacaoResponseDTO transferir(TransferenciaRequestDTO dto);
     List<MovimentacaoResponseDTO> listarPorConta(Long idConta);
-    Page<MovimentacaoResponseDTO> buscarExtrato(Long idConta, String nome, BigDecimal valor, int pagina, int tamanho, String ordenacao, String direcao);
-    ExtratoPdfResponseDTO montarExtratoPdf(Long idConta,String nome,BigDecimal valor, String ordenacao,String direcao);
+    Page<MovimentacaoResponseDTO> buscarExtrato(Long idConta, String nome, BigDecimal valor, LocalDate dataInicio,LocalDate dataFim, int pagina, int tamanho, String ordenacao, String direcao);
+    ExtratoPdfResponseDTO montarExtratoPdf(Long idConta,String nome,BigDecimal valor,LocalDate dataInicio,LocalDate dataFim, String ordenacao,String direcao);
 }

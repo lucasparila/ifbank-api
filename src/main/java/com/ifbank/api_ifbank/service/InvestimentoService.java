@@ -11,13 +11,17 @@ import org.springframework.stereotype.Service;
 
 import com.ifbank.api_ifbank.model.AplicacaoInvestimento;
 import com.ifbank.api_ifbank.model.Conta;
+import com.ifbank.api_ifbank.model.Movimentacao;
 import com.ifbank.api_ifbank.model.TipoInvestimento;
+import com.ifbank.api_ifbank.model.TipoMovimento;
 import com.ifbank.api_ifbank.model.DTO.investimento.AplicarInvestimentoRequestDTO;
 import com.ifbank.api_ifbank.model.DTO.investimento.InvestimentoDTO;
 import com.ifbank.api_ifbank.model.DTO.investimento.ResumoInvestimentoDTO;
 import com.ifbank.api_ifbank.repository.AplicacaoInvestimentoRepository;
 import com.ifbank.api_ifbank.repository.ContaRepository;
+import com.ifbank.api_ifbank.repository.MovimentacaoRepository;
 import com.ifbank.api_ifbank.repository.TipoInvestimentoRepository;
+import com.ifbank.api_ifbank.repository.TipoMovimentoRepository;
 
 import jakarta.transaction.Transactional;
 
@@ -27,13 +31,19 @@ public class InvestimentoService {
     private final AplicacaoInvestimentoRepository aplicacaoRepository;
     private final ContaRepository contaRepository;
     private final TipoInvestimentoRepository tipoInvestimentoRepository;
+    private final MovimentacaoRepository movimentacaoRepository;
+    private final TipoMovimentoRepository tipoMovimentoRepository;
 
     public InvestimentoService(AplicacaoInvestimentoRepository aplicacaoRepository,
                                ContaRepository contaRepository,
-                               TipoInvestimentoRepository tipoInvestimentoRepository) {
+                               TipoInvestimentoRepository tipoInvestimentoRepository,
+                               MovimentacaoRepository movimentacaoRepository,
+                               TipoMovimentoRepository tipoMovimentoRepository) {
         this.aplicacaoRepository = aplicacaoRepository;
         this.contaRepository = contaRepository;
         this.tipoInvestimentoRepository = tipoInvestimentoRepository;
+        this.movimentacaoRepository = movimentacaoRepository;
+        this.tipoMovimentoRepository= tipoMovimentoRepository;
     }
 
     public List<TipoInvestimento> listarTipos() {
@@ -108,6 +118,19 @@ public class InvestimentoService {
         aplicacao.setStatus("ATIVA");
 
         aplicacao = aplicacaoRepository.save(aplicacao);
+        
+        TipoMovimento tipoMovimento = tipoMovimentoRepository.findByTipoMovimento("APLICACAO_INVESTIMENTO");
+        if (tipoMovimento == null) {
+            throw new RuntimeException("Tipo de movimento 'APLICACAO_INVESTIMENTO' não configurado no banco.");
+        }
+
+        Movimentacao mov = new Movimentacao();
+        mov.setConta(conta);
+        mov.setValor(dto.getValorAplicado());
+        mov.setDataMovimento(LocalDate.now());
+        mov.setTipoMovimento(tipoMovimento);
+        mov = movimentacaoRepository.save(mov);
+        
         return toDTO(aplicacao);
     }
 
@@ -133,6 +156,18 @@ public class InvestimentoService {
 
         aplicacao.setStatus("RESGATADA");
         aplicacaoRepository.save(aplicacao);
+        
+        TipoMovimento tipoMovimento = tipoMovimentoRepository.findByTipoMovimento("RESGATE_INVESTIMENTO");
+        if (tipoMovimento == null) {
+            throw new RuntimeException("Tipo de movimento 'RESGATE_INVESTIMENTO' não configurado no banco.");
+        }
+
+        Movimentacao mov = new Movimentacao();
+        mov.setConta(conta);
+        mov.setValor(valorTotal);
+        mov.setDataMovimento(LocalDate.now());
+        mov.setTipoMovimento(tipoMovimento);
+        mov = movimentacaoRepository.save(mov);
 
         return "Resgate realizado com sucesso. Valor creditado: R$ " + valorTotal.setScale(2, RoundingMode.HALF_UP);
     }

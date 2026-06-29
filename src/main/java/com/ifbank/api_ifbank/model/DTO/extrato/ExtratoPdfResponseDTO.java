@@ -1,6 +1,7 @@
 package com.ifbank.api_ifbank.model.DTO.extrato;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -15,6 +16,8 @@ public class ExtratoPdfResponseDTO {
     private BigDecimal saldoAtual;
 
     private LocalDateTime dataEmissao;
+    private LocalDate dataInicioFiltro;
+    private LocalDate dataFimFiltro;
 
     private List<MovimentacaoResponseDTO> movimentacoes;
 
@@ -57,5 +60,21 @@ public class ExtratoPdfResponseDTO {
     public void setMovimentacoes(List<MovimentacaoResponseDTO> movimentacoes) {
         this.movimentacoes = movimentacoes;
     }
+
+	public LocalDate getDataInicioFiltro() {
+		return dataInicioFiltro;
+	}
+
+	public void setDataInicioFiltro(LocalDate dataInicioFiltro) {
+		this.dataInicioFiltro = dataInicioFiltro;
+	}
+
+	public LocalDate getDataFimFiltro() {
+		return dataFimFiltro;
+	}
+
+	public void setDataFimFiltro(LocalDate dataFimFiltro) {
+		this.dataFimFiltro = dataFimFiltro;
+	}
 	
 }

@@ -224,6 +224,8 @@ public class MovimentacaoService implements IMovimentacaoService {
     public Page<MovimentacaoResponseDTO> buscarExtrato(Long idConta,
                                                        String nome,
                                                        BigDecimal valor,
+                                                       LocalDate dataInicio,
+                                                       LocalDate dataFim,
                                                        int pagina,
                                                        int tamanho,
                                                        String ordenacao,
@@ -244,12 +246,14 @@ public class MovimentacaoService implements IMovimentacaoService {
         Page<Movimentacao> page = movimentacaoRepository.buscarPorContaNomeOuValor(idConta,
                 (nome == null || nome.isBlank()) ? null : nome,
                 valor,
+                dataInicio,
+                dataFim,
                 pageable);
 
         return page.map(this::mapToResponse);
     }
     
-    public ExtratoPdfResponseDTO montarExtratoPdf(Long idConta,String nome,BigDecimal valor,String ordenacao, String direcao) {
+    public ExtratoPdfResponseDTO montarExtratoPdf(Long idConta,String nome,BigDecimal valor, LocalDate dataInicio,LocalDate dataFim,String ordenacao, String direcao) {
     	
     	String sortField = "dataMovimento";
 
@@ -271,7 +275,7 @@ public class MovimentacaoService implements IMovimentacaoService {
 		Conta conta = contaRepository.findById(idConta)
 		.orElseThrow(() -> new RuntimeException("Conta não encontrada."));
 		
-		List<Movimentacao> movimentacoes = movimentacaoRepository.buscarPorContaNomeOuValorPdf(idConta,(nome == null || nome.isBlank()) ? null : nome,valor, sort);
+		List<Movimentacao> movimentacoes = movimentacaoRepository.buscarPorContaNomeOuValorPdf(idConta,(nome == null || nome.isBlank()) ? null : nome,valor,dataInicio,dataFim,sort);
 		
 		List<MovimentacaoResponseDTO> movimentacoesDTO = movimentacoes
 		.stream()
@@ -284,6 +288,8 @@ public class MovimentacaoService implements IMovimentacaoService {
 		dto.setNumeroConta(conta.getNumeroConta());
 		dto.setSaldoAtual(conta.getSaldo());
 		dto.setDataEmissao(LocalDateTime.now());
+		dto.setDataInicioFiltro(dataInicio);
+		dto.setDataFimFiltro(dataFim);
 		dto.setMovimentacoes(movimentacoesDTO);
 		
 		return dto;
