@@ -33,8 +33,8 @@ services:
       DB_USER: ifbank_database
       DB_PASSWORD: senha123
       UPLOAD_DIR: /app/uploads
-      MAIL_USERNAME: s.thomaz@aluno.ifsp.edu.br
-      MAIL_PASSWORD: buyz uiai elfq fref
+      MAIL_USERNAME: nikousbr02@gmail.com
+      MAIL_PASSWORD: eifhwdprfoddlsih
     volumes:
       - uploads_data:/app/uploads
     depends_on:
