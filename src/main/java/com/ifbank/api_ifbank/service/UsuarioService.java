@@ -16,8 +16,10 @@ import org.springframework.web.multipart.MultipartFile;
 import com.ifbank.api_ifbank.model.Cliente;
 import com.ifbank.api_ifbank.model.Conta;
 import com.ifbank.api_ifbank.model.Endereco;
+import com.ifbank.api_ifbank.model.Gerente;
 import com.ifbank.api_ifbank.model.Telefone;
 import com.ifbank.api_ifbank.model.Usuario;
+import com.ifbank.api_ifbank.model.DTO.atualizar.AtualizarPerfil;
 import com.ifbank.api_ifbank.model.DTO.cadastro.CadastroClienteRequestDTO;
 import com.ifbank.api_ifbank.model.DTO.cliente.ClienteDTO;
 import com.ifbank.api_ifbank.model.DTO.cliente.ContaDTO;
@@ -25,17 +27,23 @@ import com.ifbank.api_ifbank.model.DTO.cliente.EnderecoDTO;
 import com.ifbank.api_ifbank.model.DTO.cliente.TelefoneDTO;
 import com.ifbank.api_ifbank.model.DTO.login.LoginRequestDTO;
 import com.ifbank.api_ifbank.model.DTO.login.LoginResponseDTO;
-import com.ifbank.api_ifbank.model.DTO.perfil.PerfilCompletoDTO;
+import com.ifbank.api_ifbank.model.DTO.perfil.PerfilClienteCompletoDTO;
+import com.ifbank.api_ifbank.model.enums.StatusConta;
+import com.ifbank.api_ifbank.model.enums.TipoUsuario;
 import com.ifbank.api_ifbank.repository.ClienteRepository;
 import com.ifbank.api_ifbank.repository.ContaRepository;
 import com.ifbank.api_ifbank.repository.EnderecoRepository;
+import com.ifbank.api_ifbank.repository.GerenteRepository;
 import com.ifbank.api_ifbank.repository.TelefoneRepository;
 import com.ifbank.api_ifbank.repository.UsuarioRepository;
+import com.ifbank.api_ifbank.service.interfaces.IEmailService;
 import com.ifbank.api_ifbank.service.interfaces.IUsuarioService;
 
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
+@Slf4j
 public class UsuarioService implements IUsuarioService {
 
 	@Value("${app.upload.dir}")
@@ -46,8 +54,10 @@ public class UsuarioService implements IUsuarioService {
 	private TelefoneRepository telefoneRepository;
 	private ClienteRepository clienteRepository;
 	private ContaRepository contaRepository;
+	private GerenteRepository gerenteRepository;
+	private IEmailService emailService; 
 	
-	public UsuarioService(UsuarioRepository usuarioRepository,EnderecoRepository enderecoRepository,TelefoneRepository telefoneRepository,ClienteRepository clienteRepository,ContaRepository contaRepository) 
+	public UsuarioService(UsuarioRepository usuarioRepository,EnderecoRepository enderecoRepository,TelefoneRepository telefoneRepository,ClienteRepository clienteRepository,ContaRepository contaRepository,GerenteRepository gerenteRepository,IEmailService emailService) 
 		{
 		
 			this.usuarioRepository = usuarioRepository;
@@ -55,23 +65,53 @@ public class UsuarioService implements IUsuarioService {
 			this.telefoneRepository = telefoneRepository;
 			this.clienteRepository = clienteRepository;
 			this.contaRepository = contaRepository;
+			this.gerenteRepository = gerenteRepository;
+			this.emailService = emailService;
 		}
 
 	@Override
-    public LoginResponseDTO autenticar(LoginRequestDTO dadosLogin) {
-        
-        Usuario usuario = usuarioRepository.findByEmail(dadosLogin.getEmail());
-        
-        if(usuario == null) {
-        	throw new RuntimeException("Usuário não encontrado.");
-        }
-        if (!usuario.getSenha().equals(dadosLogin.getSenha())) {
-        	throw new RuntimeException("Senha incorreta.");
-        }
+	public LoginResponseDTO autenticar(LoginRequestDTO dadosLogin) {
 
-        return new LoginResponseDTO(usuario.getId(), usuario.getCpf(), usuario.getEmail(),usuario.getTipoUsuario().name());
-     
-    }
+	    Usuario usuario = usuarioRepository.findByEmail(dadosLogin.getEmail());
+
+	    if (usuario == null) {
+	        throw new RuntimeException("Usuário não encontrado.");
+	    }
+	    if (!usuario.getSenha().equals(dadosLogin.getSenha())) {
+	        throw new RuntimeException("Senha incorreta.");
+	    }
+
+	    if (usuario.getTipoUsuario().equals(TipoUsuario.CLIENTE)) {
+	        Cliente cliente = clienteRepository.findByUsuarioId(usuario.getId());
+	        if (cliente == null) {
+	            throw new RuntimeException("Cliente não encontrado.");
+	        }
+
+	        Conta conta = contaRepository.findByClienteId(cliente.getId());
+
+	        if (conta == null) {
+	            throw new RuntimeException("Conta não encontrada.");
+	        }
+
+	        switch (conta.getStatusConta()) {
+	            case PENDENTE:
+	                throw new RuntimeException("Sua conta está pendente de aprovação.");
+	            case INATIVA:
+	                throw new RuntimeException("Sua conta está inativa.");
+	            case REJEITADA:
+	                throw new RuntimeException("Sua conta foi rejeitada.");
+	            case ATIVA:
+	                break;
+	        }
+	    } else {
+	        Gerente gerente = gerenteRepository.findByUsuarioId(usuario.getId());
+	        if (gerente == null) {
+	            throw new RuntimeException("Gerente não encontrado.");
+	        }
+	    }
+
+	    return new LoginResponseDTO(usuario.getId(), usuario.getCpf(), usuario.getEmail(), usuario.getTipoUsuario().name());
+	}
     
 	@Override
     @Transactional 
@@ -94,7 +134,7 @@ public class UsuarioService implements IUsuarioService {
         usuario.setCpf(dto.getCpf());
         usuario.setEmail(dto.getEmail());
         usuario.setSenha(dto.getSenha()); 
-        usuario.setIdTipoUsuario(1l); // 1 = CLIENTE
+        usuario.setIdTipoUsuario(TipoUsuario.CLIENTE.getId());
         usuario = usuarioRepository.save(usuario);
         
         String caminhoFoto = null;
@@ -129,15 +169,17 @@ public class UsuarioService implements IUsuarioService {
         conta.setNumeroConta(numeroContaGerado);
         conta.setSaldo(BigDecimal.ZERO); 
         conta.setDataAbertura(LocalDate.now());
-        conta.setIdStatusConta(1); // 1 = PENDENTE (Aguardando aprovação do gerente)
+        conta.setIdStatusConta(StatusConta.PENDENTE.getId()); 
         conta.setCliente(cliente);
         contaRepository.save(conta);
-
+        
+        emailService.enviarEmailCadastro(cliente, usuario.getEmail());    
+        
         return "Cliente cadastrado com sucesso! Conta criada em análise: " + numeroContaGerado;
     }
     
 	@Override
-    public PerfilCompletoDTO obterPerfilCompleto(Long idUsuario) {
+    public PerfilClienteCompletoDTO obterPerfilCompleto(Long idUsuario) {
         Usuario usuario = usuarioRepository.findById(idUsuario)
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado."));
 
@@ -147,6 +189,7 @@ public class UsuarioService implements IUsuarioService {
         }
 
         Conta conta = contaRepository.findByClienteId(cliente.getId());
+       
 
         // Instancia os sub-DTOs de Contato e Localização
         EnderecoDTO enderecoDTO = null;
@@ -167,11 +210,11 @@ public class UsuarioService implements IUsuarioService {
         // Monta o ContaDTO
         ContaDTO contaDTO = null;
         if (conta != null) {
-            contaDTO = new ContaDTO(conta.getId(), conta.getNumeroConta(), conta.getSaldo(), conta.getDataAbertura(), conta.getIdStatusConta());
+            contaDTO = new ContaDTO(conta.getId(), conta.getNumeroConta(), conta.getSaldo(), conta.getDataAbertura(), conta.getStatusConta().name());
         }
 
         // Monta PerfilCompletoDTO
-        PerfilCompletoDTO perfil = new PerfilCompletoDTO(
+        PerfilClienteCompletoDTO perfil = new PerfilClienteCompletoDTO(
         		    usuario.getId(),
         	        usuario.getEmail(),
         	        usuario.getCpf(),
@@ -179,8 +222,6 @@ public class UsuarioService implements IUsuarioService {
         	        clienteDTO,
         	        contaDTO
         		);
-       
-
         return perfil;
     }
 	
@@ -211,5 +252,50 @@ public class UsuarioService implements IUsuarioService {
 	    } catch (IOException e) {
 	        throw new RuntimeException("Falha ao salvar a foto de perfil: " + e.getMessage());
 	    }
+	}
+	
+	@Override
+	@Transactional
+	public PerfilClienteCompletoDTO atualizarPerfil(Long idUsuario, AtualizarPerfil dto) {
+
+	    usuarioRepository.findById(idUsuario)
+	            .orElseThrow(() -> new RuntimeException("Usuário não encontrado."));
+
+	    Cliente cliente = clienteRepository.findByUsuarioId(idUsuario);
+	    if (cliente == null) {
+	        throw new RuntimeException("Cliente não encontrado.");
+	    }
+
+	    // Atualiza dados 
+	    if (dto.getNome() != null) cliente.setNome(dto.getNome());
+	    if (dto.getDataNascimento() != null) cliente.setDataNascimento(dto.getDataNascimento());
+
+	    // Atualiza foto 
+	    if (dto.getFoto() != null && !dto.getFoto().isEmpty()) {
+	        String caminhoFoto = salvarFoto(dto.getFoto(), idUsuario);
+	        cliente.setFotoUrl(caminhoFoto);
+	    }
+
+	    // Atualiza endereço
+	    Endereco endereco = cliente.getEndereco();
+	    if (dto.getLogradouro() != null) endereco.setLogradouro(dto.getLogradouro());
+	    if (dto.getNumero() != null) endereco.setNumero(dto.getNumero());
+	    if (dto.getComplemento() != null) endereco.setComplemento(dto.getComplemento());
+	    if (dto.getBairro() != null) endereco.setBairro(dto.getBairro());
+	    if (dto.getCidade() != null) endereco.setCidade(dto.getCidade());
+	    if (dto.getEstado() != null) endereco.setEstado(dto.getEstado());
+	    if (dto.getCep() != null) endereco.setCep(dto.getCep());
+	    enderecoRepository.save(endereco);
+
+	    // Atualiza telefone
+	    Telefone telefone = cliente.getTelefone();
+	    if (dto.getCodPais() != null) telefone.setCodPais(dto.getCodPais());
+	    if (dto.getCodArea() != null) telefone.setCodArea(dto.getCodArea());
+	    if (dto.getNumeroTelefone() != null) telefone.setNumero(dto.getNumeroTelefone());
+	    telefoneRepository.save(telefone);
+
+	    clienteRepository.save(cliente);
+
+	    return obterPerfilCompleto(idUsuario);
 	}
 }

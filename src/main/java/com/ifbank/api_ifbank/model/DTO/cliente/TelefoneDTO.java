@@ -6,6 +6,7 @@ public class TelefoneDTO {
     private Integer codArea;
     private Integer numero;
     
+    public TelefoneDTO() {}
 	public TelefoneDTO(Integer codPais, Integer codArea, Integer numero) {
 		super();
 		this.codPais = codPais;
